@@ -87,6 +87,7 @@ class Jugador : public Bot{
 
     protected:
         string nombre;
+        sf::View camara;
 
     public:
         Jugador(float posicionX, float posicionY, string nombre) : Bot(posicionX, posicionY){
@@ -99,6 +100,9 @@ class Jugador : public Bot{
 
         void interactuar(float posicionX, float posicionY){
 
+        }
+
+        void configCamara(){
         }
 
 };
