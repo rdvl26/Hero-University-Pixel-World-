@@ -46,6 +46,7 @@ class Bot : public Diseño{
         int vida;
         int daño;
         int velocidad;
+        bool vivo;
 
     public:
         Bot(float posicionX, float posicionY /* "sprite *Diseño" */ ) : Diseño(posicionX, posicionY /* "sprite *Diseño" */ ){
@@ -60,7 +61,7 @@ class Bot : public Diseño{
 
         } 
 
-        void daño(){
+        void recibioDaño(){
 
         } 
 
@@ -69,15 +70,13 @@ class Bot : public Diseño{
         }
 
         int getVida(){
-
+            return vida;
         }
 
-        string getNombre(){
-
-        }
+        
 
         int setVida(){
-
+            return vida;
         }
 
 };
@@ -100,6 +99,9 @@ class Jugador : public Bot{
         void interactuar(float posicionX, float posicionY){
 
         }
+        string getNombre(){
+            return nombre;
+        }
 
 };
 
@@ -115,7 +117,7 @@ class Enemigos : public Bot{
         }
     
     bool estaVivo(){
-
+        return vivo;
     }
 
 };
@@ -158,7 +160,7 @@ class Amado : public Diseño{
         }
         
         int getEstado(){
-
+            return estado;
         }
         
         void sincronizarSprite(){
@@ -228,7 +230,20 @@ class Plataformas : public Diseño{
 
 int main (){
 
+    sf::RenderWindow ventana(sf::VideoMode(1280,720), "Hero University");
 
+    while(ventana.isOpen()){
+        sf::Event evento;
+        while(ventana.pollEvent(evento)){ //procesar cada evento ocurrido
+            if(evento.type == sf::Event::Closed) //Evento de cerrar la ventana
+                ventana.close();
+        }
+
+
+        ventana.clear(sf::Color::Black); //Borrar el anterior FRAME y poner un fondo
+            //Lo que dibujara en cada FRAME
+        ventana.display(); //Dibujar nuevo FRAME
+    }
 
 
     return 0;
