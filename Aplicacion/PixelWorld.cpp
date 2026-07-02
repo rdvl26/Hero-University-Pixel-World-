@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <SFML/Graphics.hpp>
 
 using namespace std;
@@ -11,12 +12,16 @@ class Diseño{
     protected:
         float posicionX;
         float posicionY;
+        float alto;
+        float ancho;
         sf::Sprite sprite;
         sf:: Texture textura;
     
     public:
-        Diseño(float posicionX, float posicionY /* "sprite *Diseño" */ ){
-
+        Diseño(float posicionX, float posicionY,string rutaImagen, float alto, float ancho){
+            this->textura.loadFromFile(rutaImagen);
+            sprite.setTexture(textura);
+            sprite.setPosition(posicionX,posicionY);
         }
 
         float getPosicionX(){
@@ -32,8 +37,7 @@ class Diseño{
         }
 
         void dibujarTodo(sf::RenderWindow& ventana){
-
-        
+            ventana.draw(sprite);
         }
 
 };
@@ -49,8 +53,9 @@ class Bot : public Diseño{
         bool vivo;
 
     public:
-        Bot(float posicionX, float posicionY /* "sprite *Diseño" */ ) : Diseño(posicionX, posicionY /* "sprite *Diseño" */ ){
-
+        Bot(float posicionX, float posicionY, string rutaImagen, float alto, float ancho ) : Diseño(posicionX, posicionY, rutaImagen, alto, ancho){
+            sf::IntRect recorte(0,0,alto,ancho);
+            sprite.setTextureRect(recorte);
         }
 
         void movimiento(float posX, float posY){
@@ -88,8 +93,8 @@ class Jugador : public Bot{
         string nombre;
 
     public:
-        Jugador(float posicionX, float posicionY, string nombre) : Bot(posicionX, posicionY){
-
+        Jugador(float posicionX, float posicionY,string rutaImagen,float alto, float ancho , string nombre) :nombre(nombre), Bot(posicionX, posicionY, rutaImagen,alto,ancho){
+            
         }
 
         void saltar(float posicionX, float posicionY){
@@ -112,7 +117,7 @@ class Enemigos : public Bot{
         int tipo;
 
     public:
-        Enemigos(float posicionX, float posicionY, int tipo, int vida) : Bot(posicionX, posicionY){
+        Enemigos(float posicionX, float posicionY,string rutaImagen, float alto, float ancho, int tipo, int vida) : Bot(posicionX, posicionY,rutaImagen, alto, ancho){
 
         }
     
@@ -130,7 +135,7 @@ class Amado : public Diseño{
         int estado;
 
     public:
-        Amado( float posicionX, float posicionY, string nombre) : Diseño(posicionX, posicionY /* "sprite *Diseño" */ ){
+        Amado( float posicionX, float posicionY,string rutaImagen, float alto, float ancho, string nombre) : Diseño(posicionX, posicionY, rutaImagen, alto, ancho){
 
         }
 
@@ -176,7 +181,7 @@ class Llave : public Diseño{
         bool recogida;
 
     public:
-        Llave(float posicionX, float posicionY) : Diseño(posicionX, posicionY /* "sprite *Diseño" */ ){
+        Llave(float posicionX, float posicionY, string rutaImagen, float alto, float ancho) : Diseño(posicionX, posicionY, rutaImagen, alto, ancho){
 
         }
     
@@ -211,7 +216,7 @@ class Puerta : public Diseño{
 class Plataformas : public Diseño{
 
     public:
-    Plataformas(float posicionX, float posicionY) : Diseño(posicionX, posicionY /* "sprite *Diseño" */ ){
+    Plataformas(float posicionX, float posicionY, string rutaImagen, float alto, float ancho) : Diseño(posicionX, posicionY, rutaImagen, alto, ancho){
  
     }
 
@@ -231,6 +236,9 @@ class Plataformas : public Diseño{
 int main (){
 
     sf::RenderWindow ventana(sf::VideoMode(1280,720), "Hero University");
+    ventana.setFramerateLimit(90);
+
+    Jugador player(640.0f,500.0f,"Recursos/Jugador.png",65,100,"Principal");
 
     while(ventana.isOpen()){
         sf::Event evento;
@@ -242,6 +250,7 @@ int main (){
 
         ventana.clear(sf::Color::Black); //Borrar el anterior FRAME y poner un fondo
             //Lo que dibujara en cada FRAME
+        player.dibujarTodo(ventana);
         ventana.display(); //Dibujar nuevo FRAME
     }
 
