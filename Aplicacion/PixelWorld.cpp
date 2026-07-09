@@ -18,7 +18,7 @@ class Diseño{
         sf:: Texture textura;
     
     public:
-        Diseño(float posicionX, float posicionY,string rutaImagen, float alto, float ancho){
+        Diseño(float posicionX, float posicionY,string rutaImagen, float alto, float ancho): posicionX(posicionX),posicionY(posicionY),alto(alto),ancho(ancho){
             this->textura.loadFromFile(rutaImagen);
             sprite.setTexture(textura);
             sprite.setPosition(posicionX,posicionY);
@@ -52,14 +52,102 @@ class Bot : public Diseño{
         int velocidad;
         bool vivo;
 
+        //Variables para animacion
+        sf::IntRect recorte;
+        int frameActual;
+        int espaciado;
+        float contador;
+        float temporizador;
+        int animacionX, animacionY;
+        float altoFrame;
+        float anchoFrame;
+        bool voltearSprite;
+        
+
     public:
         Bot(float posicionX, float posicionY, string rutaImagen, float alto, float ancho ) : Diseño(posicionX, posicionY, rutaImagen, alto, ancho){
-            sf::IntRect recorte(0,0,alto,ancho);
+            //Recorte inicial
+            animacionX = 0;
+            animacionY = 0;
+            contador = 0;
+            altoFrame = alto;
+            anchoFrame = ancho;
+            recorte = sf::IntRect(animacionX,animacionY,altoFrame,anchoFrame);
             sprite.setTextureRect(recorte);
+            voltearSprite = false;
         }
+        void movimiento(sf::RenderWindow& ventana,float& dt){
+            if(voltearSprite){
+                voltearSprite = false;
+                sprite.setScale(1.0f,1.0f);
+            }
+           
+           if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+                contador+=dt;
+                if(contador < 0.25){
+                    recorte = sf::IntRect(animacionX = 0,animacionY = 0,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 0.75){
+                    recorte = sf::IntRect(animacionX = 125,animacionY = 0,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                    
+                }else if(contador < 1.25){
+                    recorte = sf::IntRect(animacionX = 250,animacionY = 0,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 1.75){
+                    recorte = sf::IntRect(animacionX = 0,animacionY = 125,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 2.25){
+                    recorte = sf::IntRect(animacionX = 125,animacionY = 125,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 2.75){
+                    recorte = sf::IntRect(animacionX = 250,animacionY = 125,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                    contador = 0;
+                }
+    
+                posicionX += 100*dt;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 
-        void movimiento(float posX, float posY){
+                if(!voltearSprite)
+                    sprite.setScale(-1.0f,1.0f); //Volteado el sprite
+                posicionX -= 100*dt;
+                voltearSprite = true;
+                contador+=dt;
 
+                if(contador < 0.25){
+                    recorte = sf::IntRect(animacionX = 0,animacionY = 0,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 0.75){
+                    recorte = sf::IntRect(animacionX = 125,animacionY = 0,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                    
+                }else if(contador < 1.25){
+                    recorte = sf::IntRect(animacionX = 250,animacionY = 0,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 1.75){
+                    recorte = sf::IntRect(animacionX = 0,animacionY = 125,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 2.25){
+                    recorte = sf::IntRect(animacionX = 125,animacionY = 125,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 2.75){
+                    recorte = sf::IntRect(animacionX = 250,animacionY = 125,altoFrame,anchoFrame);
+                    sprite.setTextureRect(recorte);
+                    contador = 0;
+                }
+            }
+    
+    
+            if (posicionX > 1280 - anchoFrame) {
+                posicionX = 1280 - anchoFrame;
+            }
+            if (posicionX<0) {
+                posicionX = 0;
+            }
+    
+            sprite.setPosition(posicionX, posicionY);
         }
 
         void combate(){
@@ -95,6 +183,10 @@ class Jugador : public Bot{
     public:
         Jugador(float posicionX, float posicionY,string rutaImagen,float alto, float ancho , string nombre) :nombre(nombre), Bot(posicionX, posicionY, rutaImagen,alto,ancho){
             
+        }
+
+        void movimiento(sf::RenderWindow& ventana,float& dt){
+            Bot::movimiento(ventana, dt);
         }
 
         void saltar(float posicionX, float posicionY){
@@ -237,10 +329,13 @@ int main (){
 
     sf::RenderWindow ventana(sf::VideoMode(1280,720), "Hero University");
     ventana.setFramerateLimit(90);
-
+    sf::Clock reloj;
+    float dt; //Cambio del tiempo entre frame
     Jugador player(640.0f,500.0f,"Recursos/Jugador.png",65,100,"Principal");
 
     while(ventana.isOpen()){
+        dt = reloj.restart().asSeconds();
+        
         sf::Event evento;
         while(ventana.pollEvent(evento)){ //procesar cada evento ocurrido
             if(evento.type == sf::Event::Closed) //Evento de cerrar la ventana
@@ -251,6 +346,7 @@ int main (){
         ventana.clear(sf::Color::Black); //Borrar el anterior FRAME y poner un fondo
             //Lo que dibujara en cada FRAME
         player.dibujarTodo(ventana);
+        player.movimiento(ventana,dt);
         ventana.display(); //Dibujar nuevo FRAME
     }
 
