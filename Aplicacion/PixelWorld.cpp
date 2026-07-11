@@ -15,7 +15,7 @@ class Diseño{
         float alto;
         float ancho;
         sf::Sprite sprite;
-        sf:: Texture textura;
+        sf::Texture textura;
     
     public:
         Diseño(float posicionX, float posicionY,string rutaImagen, float alto, float ancho): posicionX(posicionX),posicionY(posicionY),alto(alto),ancho(ancho){
@@ -31,8 +31,8 @@ class Diseño{
         float getPosicionY(){
             return posicionY;
         }
-
-        void SincronizarSprite(){
+//Este metodo no hace nada
+       void SincronizarSprite(){
             sprite.setPosition(posicionX, posicionY);
         }
 
@@ -65,14 +65,14 @@ class Bot : public Diseño{
         
 
     public:
-        Bot(float posicionX, float posicionY, string rutaImagen, float alto, float ancho ) : Diseño(posicionX, posicionY, rutaImagen, alto, ancho){
+        Bot(float posicionX, float posicionY, string rutaImagen, float ancho, float alto ) : Diseño(posicionX, posicionY, rutaImagen, alto, ancho){
             //Recorte inicial
             animacionX = 0;
             animacionY = 0;
-            contador = 0;
-            altoFrame = alto;
+            contador = 0; 
             anchoFrame = ancho;
-            recorte = sf::IntRect(animacionX,animacionY,altoFrame,anchoFrame);
+            altoFrame = alto;
+            recorte = sf::IntRect(animacionX,animacionY,anchoFrame,altoFrame);
             sprite.setTextureRect(recorte);
             voltearSprite = false;
         }
@@ -84,24 +84,24 @@ class Bot : public Diseño{
            
            if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
                 contador+=dt;
-                if(contador < 0.25){
-                    recorte = sf::IntRect(animacionX = 0,animacionY = 0,altoFrame,anchoFrame);
+                if(contador < 0.20){
+                    recorte = sf::IntRect(animacionX = 0,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.75){
-                    recorte = sf::IntRect(animacionX = 125,animacionY = 0,altoFrame,anchoFrame);
+                }else if(contador < 0.60){
+                    recorte = sf::IntRect(animacionX = anchoFrame,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     
-                }else if(contador < 1.25){
-                    recorte = sf::IntRect(animacionX = 250,animacionY = 0,altoFrame,anchoFrame);
+                }else if(contador < 1.00){
+                    recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 1.75){
-                    recorte = sf::IntRect(animacionX = 0,animacionY = 125,altoFrame,anchoFrame);
+                }else if(contador < 1.40){
+                    recorte = sf::IntRect(animacionX = 0,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 2.25){
-                    recorte = sf::IntRect(animacionX = 125,animacionY = 125,altoFrame,anchoFrame);
+                }else if(contador < 1.80){
+                    recorte = sf::IntRect(animacionX = anchoFrame,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 2.75){
-                    recorte = sf::IntRect(animacionX = 250,animacionY = 125,altoFrame,anchoFrame);
+                }else if(contador < 2.20){
+                    recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     contador = 0;
                 }
@@ -112,31 +112,32 @@ class Bot : public Diseño{
 
                 if(!voltearSprite)
                     sprite.setScale(-1.0f,1.0f); //Volteado el sprite
-                posicionX -= 100*dt;
+                sprite.setOrigin(50,0);
                 voltearSprite = true;
                 contador+=dt;
-
-                if(contador < 0.25){
-                    recorte = sf::IntRect(animacionX = 0,animacionY = 0,altoFrame,anchoFrame);
+                if(contador < 0.20){
+                    recorte = sf::IntRect(animacionX = 0,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.75){
-                    recorte = sf::IntRect(animacionX = 125,animacionY = 0,altoFrame,anchoFrame);
+                }else if(contador < 0.60){
+                    recorte = sf::IntRect(animacionX = anchoFrame,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     
-                }else if(contador < 1.25){
-                    recorte = sf::IntRect(animacionX = 250,animacionY = 0,altoFrame,anchoFrame);
+                }else if(contador < 1.00){
+                    recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 1.75){
-                    recorte = sf::IntRect(animacionX = 0,animacionY = 125,altoFrame,anchoFrame);
+                }else if(contador < 1.40){
+                    recorte = sf::IntRect(animacionX = 0,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 2.25){
-                    recorte = sf::IntRect(animacionX = 125,animacionY = 125,altoFrame,anchoFrame);
+                }else if(contador < 1.80){
+                    recorte = sf::IntRect(animacionX = anchoFrame,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 2.75){
-                    recorte = sf::IntRect(animacionX = 250,animacionY = 125,altoFrame,anchoFrame);
+                }else if(contador < 2.20){
+                    recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     contador = 0;
                 }
+    
+                posicionX -= 100*dt;
             }
     
     
@@ -331,7 +332,7 @@ int main (){
     ventana.setFramerateLimit(90);
     sf::Clock reloj;
     float dt; //Cambio del tiempo entre frame
-    Jugador player(640.0f,500.0f,"Recursos/Jugador.png",65,100,"Principal");
+    Jugador player(640.0f,500.0f,"Recursos/Jugador.png",71,104,"Principal");
 
     while(ventana.isOpen()){
         dt = reloj.restart().asSeconds();
@@ -343,7 +344,7 @@ int main (){
         }
 
 
-        ventana.clear(sf::Color::Black); //Borrar el anterior FRAME y poner un fondo
+        ventana.clear(sf::Color::Green); //Borrar el anterior FRAME y poner un fondo
             //Lo que dibujara en cada FRAME
         player.dibujarTodo(ventana);
         player.movimiento(ventana,dt);
