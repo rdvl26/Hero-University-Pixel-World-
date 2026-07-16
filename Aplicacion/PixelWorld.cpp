@@ -61,7 +61,6 @@ class Bot : public Diseño{
         int animacionX, animacionY;
         float altoFrame;
         float anchoFrame;
-        bool voltearSprite;
         
 
     public:
@@ -74,34 +73,29 @@ class Bot : public Diseño{
             altoFrame = alto;
             recorte = sf::IntRect(animacionX,animacionY,anchoFrame,altoFrame);
             sprite.setTextureRect(recorte);
-            voltearSprite = false;
         }
         void movimiento(sf::RenderWindow& ventana,float& dt){
-            if(voltearSprite){
-                voltearSprite = false;
-                sprite.setScale(1.0f,1.0f);
-            }
            
            if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
                 contador+=dt;
                 if(contador < 0.20){
                     recorte = sf::IntRect(animacionX = 0,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.60){
+                }else if(contador < 0.35){
                     recorte = sf::IntRect(animacionX = anchoFrame,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     
-                }else if(contador < 1.00){
+                }else if(contador < 0.50){
                     recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 1.40){
-                    recorte = sf::IntRect(animacionX = 0,animacionY = altoFrame,anchoFrame,altoFrame);
+                }else if(contador < 0.65){
+                    recorte = sf::IntRect(animacionX = anchoFrame*3,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 1.80){
-                    recorte = sf::IntRect(animacionX = anchoFrame,animacionY = altoFrame,anchoFrame,altoFrame);
+                }else if(contador < 0.80){
+                    recorte = sf::IntRect(animacionX = anchoFrame*4,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 2.20){
-                    recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = altoFrame,anchoFrame,altoFrame);
+                }else if(contador < 0.95){
+                    recorte = sf::IntRect(animacionX = anchoFrame*5,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     contador = 0;
                 }
@@ -110,29 +104,26 @@ class Bot : public Diseño{
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 
-                if(!voltearSprite)
-                    sprite.setScale(-1.0f,1.0f); //Volteado el sprite
                 sprite.setOrigin(50,0);
-                voltearSprite = true;
                 contador+=dt;
                 if(contador < 0.20){
-                    recorte = sf::IntRect(animacionX = 0,animacionY = 0,anchoFrame,altoFrame);
-                    sprite.setTextureRect(recorte);
-                }else if(contador < 0.60){
-                    recorte = sf::IntRect(animacionX = anchoFrame,animacionY = 0,anchoFrame,altoFrame);
-                    sprite.setTextureRect(recorte);
-                    
-                }else if(contador < 1.00){
-                    recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = 0,anchoFrame,altoFrame);
-                    sprite.setTextureRect(recorte);
-                }else if(contador < 1.40){
                     recorte = sf::IntRect(animacionX = 0,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 1.80){
+                }else if(contador < 0.35){
                     recorte = sf::IntRect(animacionX = anchoFrame,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 2.20){
+                    
+                }else if(contador < 0.50){
                     recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = altoFrame,anchoFrame,altoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 0.65){
+                    recorte = sf::IntRect(animacionX = anchoFrame*3,animacionY = altoFrame,anchoFrame,altoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 0.8){
+                    recorte = sf::IntRect(animacionX = anchoFrame*4,animacionY = altoFrame,anchoFrame,altoFrame);
+                    sprite.setTextureRect(recorte);
+                }else if(contador < 0.95){
+                    recorte = sf::IntRect(animacionX = anchoFrame*5,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     contador = 0;
                 }
@@ -332,7 +323,12 @@ int main (){
     ventana.setFramerateLimit(90);
     sf::Clock reloj;
     float dt; //Cambio del tiempo entre frame
-    Jugador player(640.0f,500.0f,"Recursos/Jugador.png",71,104,"Principal");
+    Jugador player(640.0f,500.0f,"Aplicacion/Recursos/JUGADOR.png",71,104,"Principal");
+
+    //Prueba solo pal piso
+    sf::RectangleShape suelo(sf::Vector2f(1280,200));
+    suelo.setFillColor(sf::Color(102,51,0));
+    suelo.setPosition(0,600);
 
     while(ventana.isOpen()){
         dt = reloj.restart().asSeconds();
@@ -348,6 +344,7 @@ int main (){
             //Lo que dibujara en cada FRAME
         player.dibujarTodo(ventana);
         player.movimiento(ventana,dt);
+        ventana.draw(suelo);
         ventana.display(); //Dibujar nuevo FRAME
     }
 
