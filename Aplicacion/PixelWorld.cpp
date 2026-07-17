@@ -327,7 +327,7 @@ int main (){
 
     //Prueba solo pal piso
     sf::RectangleShape suelo(sf::Vector2f(1280,200));
-    suelo.setFillColor(sf::Color(102,51,0));
+    suelo.setFillColor(sf::Color(0,153,0));
     suelo.setPosition(0,600);
 
     while(ventana.isOpen()){
@@ -340,7 +340,7 @@ int main (){
         }
 
 
-        ventana.clear(sf::Color::Green); //Borrar el anterior FRAME y poner un fondo
+        ventana.clear(sf::Color(51,153,255)); //Borrar el anterior FRAME y poner un fondo
             //Lo que dibujara en cada FRAME
         player.dibujarTodo(ventana);
         player.movimiento(ventana,dt);
