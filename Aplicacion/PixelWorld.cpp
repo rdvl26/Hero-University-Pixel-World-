@@ -31,10 +31,6 @@ class Diseño{
         float getPosicionY(){
             return posicionY;
         }
-//Este metodo no hace nada
-       void SincronizarSprite(){
-            sprite.setPosition(posicionX, posicionY);
-        }
 
         void dibujarTodo(sf::RenderWindow& ventana){
             ventana.draw(sprite);
@@ -293,12 +289,45 @@ class Puerta : public Diseño{
     }    
 };
 
-//CLASE HIJA 5######
+class Fondo{
+private:
+    vector<sf::Texture> cargarTexturaFondo;
+    vector<sf::Sprite> spritesSuelo;
+    sf::Sprite cielo;
+    int posX;
+    const int posY = 600;
+public:
+    Fondo(vector<string> ruta){
+        this->posX = 0;
+        //Cargar fondos en la GPU
+        for(auto& rect: ruta){
+            cargarTexturaFondo.emplace_back();
+            cargarTexturaFondo.back().loadFromFile(rect);
+        }
+        cielo.setTexture(cargarTexturaFondo[0]);
+        cielo.setPosition(0,0);
+        cielo.setScale(10.0f,4.685f);
+    }
+    void suelo(){
+        int i;
+        for(i = 0; i < 20; i++){
+            spritesSuelo.emplace_back(cargarTexturaFondo[1]);
+        }
+        for(i = 0; i < spritesSuelo.size(); i++){
+            spritesSuelo[i].setPosition(posX + 128*i,posY);
+            spritesSuelo[i].setScale(1.0f,1.0f);
+        }
+    }
+    void dibujarTodo(sf::RenderWindow& ventana){
+        for(int i = 0; i < spritesSuelo.size(); i++){
+            ventana.draw(spritesSuelo[i]);
+        }
+        ventana.draw(cielo);
+    }
+};
 class Plataformas : public Diseño{
-
     public:
-    Plataformas(float posicionX, float posicionY, string rutaImagen, float alto, float ancho) : Diseño(posicionX, posicionY, rutaImagen, alto, ancho){
- 
+    Plataformas(float posicionX, float posicionY, string suelo, float alto, float ancho) : Diseño(posicionX, posicionY, suelo, alto, ancho){
     }
 
     void colision(/* "Jugador*, enemigos*" */){
@@ -311,7 +340,13 @@ class Plataformas : public Diseño{
 
 };
 
-
+vector<string> cargarFondo(){
+    vector<string> rutafondos;
+    rutafondos.reserve(2);
+    rutafondos.emplace_back("Aplicacion/Recursos/cielo.png");
+    rutafondos.emplace_back("Aplicacion/Recursos/piso.png");
+    return rutafondos;
+}
 
 
 int main (){
@@ -320,12 +355,8 @@ int main (){
     ventana.setFramerateLimit(90);
     sf::Clock reloj;
     float dt; //Cambio del tiempo entre frame
-    Jugador player(640.0f,500.0f,"Recursos/JUGADOR.png",71,104,"Principal");
-
-    //Prueba solo pal piso
-    sf::RectangleShape suelo(sf::Vector2f(1280,200));
-    suelo.setFillColor(sf::Color(0,153,0));
-    suelo.setPosition(0,600);
+    Jugador player(640.0f,550.0f,"Aplicacion/Recursos/JUGADOR.png",71,104,"Principal");
+    Fondo fondos(cargarFondo());
 
     while(ventana.isOpen()){
         dt = reloj.restart().asSeconds();
@@ -338,10 +369,12 @@ int main (){
 
 
         ventana.clear(sf::Color(51,153,255)); //Borrar el anterior FRAME y poner un fondo
-            //Lo que dibujara en cada FRAME
+        //Lo que dibujara en cada FRAME
+        fondos.suelo();
+        fondos.dibujarTodo(ventana);
         player.dibujarTodo(ventana);
         player.movimiento(ventana,dt);
-        ventana.draw(suelo);
+        
         ventana.display(); //Dibujar nuevo FRAME
     }
 
