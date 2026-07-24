@@ -38,8 +38,6 @@ class Diseño{
 
 };
 
-//######CLASE HIJA 1######
-
 class Bot : public Diseño{
 
     protected:
@@ -159,7 +157,6 @@ class Bot : public Diseño{
 
 };
 
-//######CLASE HIJA 1.1######
 class Jugador : public Bot{
 
     protected:
@@ -187,7 +184,6 @@ class Jugador : public Bot{
 
 };
 
-//######CLASE HIJA 1.2######
 class Enemigos : public Bot{
 
     protected:
@@ -204,7 +200,6 @@ class Enemigos : public Bot{
 
 };
 
-//######CLASE HIJA 2######
 class Amado : public Diseño{
 
     protected:
@@ -251,7 +246,6 @@ class Amado : public Diseño{
 
 };
 
-//######CLASE HIJA 3######
 class Llave : public Diseño{
 
     protected:
@@ -277,7 +271,6 @@ class Llave : public Diseño{
 
 };
 
-//######CLASE HIJA 4######
 class Puerta : public Diseño{
 
     protected:
@@ -293,20 +286,22 @@ class Fondo{
 private:
     vector<sf::Texture> cargarTexturaFondo;
     vector<sf::Sprite> spritesSuelo;
-    sf::Sprite cielo;
-    int posX;
-    const int posY = 600;
+    vector<sf::Sprite> spritesCielo;
+    int posX_suelo;
+    const int posY_suelo = 600;
 public:
     Fondo(vector<string> ruta){
-        this->posX = 0;
+        this->posX_suelo = 0;
         //Cargar fondos en la GPU
         for(auto& rect: ruta){
             cargarTexturaFondo.emplace_back();
             cargarTexturaFondo.back().loadFromFile(rect);
         }
+        /*
         cielo.setTexture(cargarTexturaFondo[0]);
         cielo.setPosition(0,0);
-        cielo.setScale(10.0f,4.685f);
+        cielo.setScale(10.0f,.685f);
+        */
     }
     void suelo(){
         int i;
@@ -314,15 +309,30 @@ public:
             spritesSuelo.emplace_back(cargarTexturaFondo[1]);
         }
         for(i = 0; i < spritesSuelo.size(); i++){
-            spritesSuelo[i].setPosition(posX + 128*i,posY);
+            spritesSuelo[i].setPosition(posX_suelo + 128*i,posY_suelo);
             spritesSuelo[i].setScale(1.0f,1.0f);
         }
     }
+    void cielo(){
+        int i;
+        for(i = 0; i < 20; i++){
+            spritesCielo.emplace_back(cargarTexturaFondo[0]);
+        }
+        for(i = 0; i < spritesCielo.size(); i++){
+            spritesCielo[i].setPosition(0 + 128*i,0);
+            spritesCielo[i].setScale(2.0f,2.0f);
+        }
+    }
     void dibujarTodo(sf::RenderWindow& ventana){
-        for(int i = 0; i < spritesSuelo.size(); i++){
+        Fondo::suelo();
+        Fondo::cielo();
+        int i;
+        for(i = 0; i < spritesCielo.size(); i++){
+            ventana.draw(spritesCielo[i]);
+        }
+        for(i = 0; i < spritesSuelo.size(); i++){
             ventana.draw(spritesSuelo[i]);
         }
-        ventana.draw(cielo);
     }
 };
 class Plataformas : public Diseño{
@@ -370,7 +380,8 @@ int main (){
 
         ventana.clear(sf::Color(51,153,255)); //Borrar el anterior FRAME y poner un fondo
         //Lo que dibujara en cada FRAME
-        fondos.suelo();
+        
+        
         fondos.dibujarTodo(ventana);
         player.dibujarTodo(ventana);
         player.movimiento(ventana,dt);
