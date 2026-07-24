@@ -54,10 +54,7 @@ class Bot : public Diseño{
 
         //Variables para animacion
         sf::IntRect recorte;
-        int frameActual;
-        int espaciado;
         float contador;
-        float temporizador;
         int animacionX, animacionY;
         float altoFrame;
         float anchoFrame;
@@ -81,20 +78,20 @@ class Bot : public Diseño{
                 if(contador < 0.20){
                     recorte = sf::IntRect(animacionX = 0,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.35){
+                }else if(contador < 0.33){
                     recorte = sf::IntRect(animacionX = anchoFrame,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     
-                }else if(contador < 0.50){
+                }else if(contador < 0.46){
                     recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.65){
+                }else if(contador < 0.59){
                     recorte = sf::IntRect(animacionX = anchoFrame*3,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.80){
+                }else if(contador < 0.72){
                     recorte = sf::IntRect(animacionX = anchoFrame*4,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.95){
+                }else if(contador < 0.85){
                     recorte = sf::IntRect(animacionX = anchoFrame*5,animacionY = 0,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     contador = 0;
@@ -109,20 +106,20 @@ class Bot : public Diseño{
                 if(contador < 0.20){
                     recorte = sf::IntRect(animacionX = 0,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.35){
+                }else if(contador < 0.33){
                     recorte = sf::IntRect(animacionX = anchoFrame,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     
-                }else if(contador < 0.50){
+                }else if(contador < 0.46){
                     recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.65){
+                }else if(contador < 0.59){
                     recorte = sf::IntRect(animacionX = anchoFrame*3,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.8){
+                }else if(contador < 0.72){
                     recorte = sf::IntRect(animacionX = anchoFrame*4,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
-                }else if(contador < 0.95){
+                }else if(contador < 0.85){
                     recorte = sf::IntRect(animacionX = anchoFrame*5,animacionY = altoFrame,anchoFrame,altoFrame);
                     sprite.setTextureRect(recorte);
                     contador = 0;
@@ -323,7 +320,7 @@ int main (){
     ventana.setFramerateLimit(90);
     sf::Clock reloj;
     float dt; //Cambio del tiempo entre frame
-    Jugador player(640.0f,500.0f,"Aplicacion/Recursos/JUGADOR.png",71,104,"Principal");
+    Jugador player(640.0f,500.0f,"Recursos/JUGADOR.png",71,104,"Principal");
 
     //Prueba solo pal piso
     sf::RectangleShape suelo(sf::Vector2f(1280,200));
