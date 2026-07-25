@@ -66,32 +66,36 @@ class Bot : public Diseño{
             sprite.setTextureRect(recorte);
         }
         void movimiento(sf::RenderWindow& ventana,float& dt){
-           
-           if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-                contador+=dt;
-                if(contador < 0.20){
-                    recorte = sf::IntRect(animacionX = 0,animacionY = 0,anchoFrame,altoFrame);
-                    sprite.setTextureRect(recorte);
-                }else if(contador < 0.33){
-                    recorte = sf::IntRect(animacionX = anchoFrame,animacionY = 0,anchoFrame,altoFrame);
-                    sprite.setTextureRect(recorte);
-                    
-                }else if(contador < 0.46){
-                    recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = 0,anchoFrame,altoFrame);
-                    sprite.setTextureRect(recorte);
-                }else if(contador < 0.59){
-                    recorte = sf::IntRect(animacionX = anchoFrame*3,animacionY = 0,anchoFrame,altoFrame);
-                    sprite.setTextureRect(recorte);
-                }else if(contador < 0.72){
-                    recorte = sf::IntRect(animacionX = anchoFrame*4,animacionY = 0,anchoFrame,altoFrame);
-                    sprite.setTextureRect(recorte);
-                }else if(contador < 0.85){
-                    recorte = sf::IntRect(animacionX = anchoFrame*5,animacionY = 0,anchoFrame,altoFrame);
-                    sprite.setTextureRect(recorte);
-                    contador = 0;
+            if(!sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+                    contador+=dt;
+                    if(contador < 0.20){
+                        recorte = sf::IntRect(animacionX = 0,animacionY = 0,anchoFrame,altoFrame);
+                        sprite.setTextureRect(recorte);
+                    }else if(contador < 0.33){
+                        recorte = sf::IntRect(animacionX = anchoFrame,animacionY = 0,anchoFrame,altoFrame);
+                        sprite.setTextureRect(recorte);
+                        
+                    }else if(contador < 0.46){
+                        recorte = sf::IntRect(animacionX = anchoFrame*2,animacionY = 0,anchoFrame,altoFrame);
+                        sprite.setTextureRect(recorte);
+                        
+                    }else if(contador < 0.59){
+                        recorte = sf::IntRect(animacionX = anchoFrame*3,animacionY = 0,anchoFrame,altoFrame);
+                        sprite.setTextureRect(recorte);
+
+                    }else if(contador < 0.72){
+                        recorte = sf::IntRect(animacionX = anchoFrame*4,animacionY = 0,anchoFrame,altoFrame);
+                        sprite.setTextureRect(recorte);
+                        
+                    }else if(contador < 0.85){
+                        recorte = sf::IntRect(animacionX = anchoFrame*5,animacionY = 0,anchoFrame,altoFrame);
+                        sprite.setTextureRect(recorte);
+                        contador = 0;
+                    }
+        
+                    posicionX += 90*dt;
                 }
-    
-                posicionX += 100*dt;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 
@@ -119,7 +123,7 @@ class Bot : public Diseño{
                     contador = 0;
                 }
     
-                posicionX -= 100*dt;
+                posicionX -= 90*dt;
             }
     
     
@@ -164,7 +168,7 @@ class Jugador : public Bot{
 
     public:
         Jugador(float posicionX, float posicionY,string rutaImagen,float alto, float ancho , string nombre) :nombre(nombre), Bot(posicionX, posicionY, rutaImagen,alto,ancho){
-            
+            sprite.setScale(1.15f,1.15f);
         }
 
         void movimiento(sf::RenderWindow& ventana,float& dt){
@@ -287,8 +291,9 @@ private:
     vector<sf::Texture> cargarTexturaFondo;
     vector<sf::Sprite> spritesSuelo;
     vector<sf::Sprite> spritesCielo;
+    sf::Sprite montaña;
     int posX_suelo;
-    const int posY_suelo = 600;
+    const int posY_suelo = 528;
 public:
     Fondo(vector<string> ruta){
         this->posX_suelo = 0;
@@ -307,10 +312,11 @@ public:
         int i;
         for(i = 0; i < 20; i++){
             spritesSuelo.emplace_back(cargarTexturaFondo[1]);
+            spritesSuelo[i].setScale(1.5f,1.5f);
         }
         for(i = 0; i < spritesSuelo.size(); i++){
-            spritesSuelo[i].setPosition(posX_suelo + 128*i,posY_suelo);
-            spritesSuelo[i].setScale(1.0f,1.0f);
+            spritesSuelo[i].setPosition(posX_suelo + 192*i,posY_suelo);
+            spritesSuelo[i].setScale(1.5f,1.5f);
         }
     }
     void cielo(){
@@ -319,13 +325,25 @@ public:
             spritesCielo.emplace_back(cargarTexturaFondo[0]);
         }
         for(i = 0; i < spritesCielo.size(); i++){
-            spritesCielo[i].setPosition(0 + 128*i,0);
-            spritesCielo[i].setScale(2.0f,2.0f);
+            spritesCielo[i].setScale(1.5f,1.5f);
+            spritesCielo[i].setPosition(0 + 192*i,0);
+            
         }
+    }
+    void cargarMontañas(){
+
+        montaña.setTexture(cargarTexturaFondo[2]);
+        
+        montaña.setScale(2.0f,2.0f);
+        montaña.setPosition(0,0);
+           
+
     }
     void dibujarTodo(sf::RenderWindow& ventana){
         Fondo::suelo();
         Fondo::cielo();
+        Fondo::cargarMontañas();
+        
         int i;
         for(i = 0; i < spritesCielo.size(); i++){
             ventana.draw(spritesCielo[i]);
@@ -333,6 +351,8 @@ public:
         for(i = 0; i < spritesSuelo.size(); i++){
             ventana.draw(spritesSuelo[i]);
         }
+        ventana.draw(montaña);
+       
     }
 };
 class Plataformas : public Diseño{
@@ -355,6 +375,7 @@ vector<string> cargarFondo(){
     rutafondos.reserve(2);
     rutafondos.emplace_back("Aplicacion/Recursos/cielo.png");
     rutafondos.emplace_back("Aplicacion/Recursos/piso.png");
+    rutafondos.emplace_back("Aplicacion/Recursos/montañas.png");
     return rutafondos;
 }
 
@@ -365,7 +386,7 @@ int main (){
     ventana.setFramerateLimit(90);
     sf::Clock reloj;
     float dt; //Cambio del tiempo entre frame
-    Jugador player(640.0f,550.0f,"Aplicacion/Recursos/JUGADOR.png",71,104,"Principal");
+    Jugador player(640.0f,485.0f,"Aplicacion/Recursos/JUGADOR.png",71,104,"Principal");
     Fondo fondos(cargarFondo());
 
     while(ventana.isOpen()){
