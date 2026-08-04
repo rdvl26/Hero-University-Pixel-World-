@@ -23,7 +23,7 @@ class Diseño{
         
         float getPosicionY();
 
-        void dibujarTodo(sf::RenderWindow& ventana);
+        virtual void dibujarTodo(sf::RenderWindow& ventana);
 
 };
 

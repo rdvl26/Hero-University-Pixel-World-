@@ -25,7 +25,7 @@ class Bot : public Diseño{
         Bot(float posicionX, float posicionY, std::string rutaImagen, float ancho, float alto );
 
         ~Bot() override;
-        void movimiento(sf::RenderWindow& ventana,float& dt);
+        virtual void movimiento(sf::RenderWindow& ventana,float& dt);
 
         void combate();
 
