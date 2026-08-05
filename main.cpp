@@ -30,12 +30,12 @@ int main (){
             if(evento.type == sf::Event::Closed) //Evento de cerrar la ventana
                 ventana.close();
         }
+        player.actualizar(ventana, dt);
         ventana.clear(sf::Color(51,153,255)); //Borrar el anterior FRAME y poner un fondo
         //Lo que dibujara en cada FRAME
         
         fondos.dibujarTodo(ventana);
         player.dibujarTodo(ventana);
-        player.movimiento(ventana,dt);
         ventana.display(); //Dibujar nuevo FRAME
     }
 

@@ -16,7 +16,10 @@
     Bot::~Bot(){
         
     }
-    void Bot::movimiento(sf::RenderWindow& ventana,float& dt){
+    void Bot::movimientoIzq(sf::RenderWindow& ventana,float& dt){
+           
+        }
+    void Bot::movimientoDer(sf::RenderWindow& ventana,float& dt){
            
         }
 
