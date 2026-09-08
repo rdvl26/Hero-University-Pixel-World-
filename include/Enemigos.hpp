@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+
 #include "Bot.hpp"
 
 class Enemigos : public Bot{
@@ -12,7 +13,6 @@ class Enemigos : public Bot{
 
     public:
         Enemigos(float posicionX, float posicionY,std::string rutaImagen, float alto, float ancho, int tipo, int vida);
-
         ~Enemigos() override;
 
         bool estaVivo();

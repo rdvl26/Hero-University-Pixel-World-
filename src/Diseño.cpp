@@ -1,6 +1,4 @@
 #include "../include/Diseño.hpp"
-#include <SFML/Graphics.hpp>
-#include <string>
 
     Diseño::Diseño(float posicionX, float posicionY,std::string rutaImagen, float alto, float ancho): posicionX(posicionX),posicionY(posicionY),alto(alto),ancho(ancho){
             this->textura.loadFromFile(rutaImagen);
@@ -9,7 +7,7 @@
         }
 
     Diseño::~Diseño(){
-        
+    
     }
     float Diseño::getPosicionX(){
             return posicionX;

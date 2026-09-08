@@ -1,6 +1,5 @@
 #include "../include/MaquinaEstados.hpp"
 #include "../include/Jugador.hpp"
-#include <iostream>
 
 void MaquinaEstados::cambiarEstado(Estados nuevoEstado){
     if(estadoActual != nuevoEstado){
