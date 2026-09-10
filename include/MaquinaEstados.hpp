@@ -9,7 +9,9 @@
         Quieto,
         CaminarIzq,
         CaminarDer,
-        Saltar,
+        SaltoVertical,
+        SaltoDerecha,
+        SaltoIzquierda,
         Agacharse,
         Combate
     };
@@ -22,7 +24,10 @@
         bool teclaA;
         bool teclaS;
         bool teclaD;
-        bool izq = false, der = false;
+        bool izq = false, der = true;
+        bool estaEnSuelo = false;
+        bool estaEnElAire = false;
+        float escalaX;
 
         public:
         MaquinaEstados(Jugador* j): jugador(j){}
@@ -31,7 +36,7 @@
 
         Estados getEstado() const;
 
-        void actualizar(sf::RenderWindow& ventana, float dt);
+        void actualizar(sf::RenderWindow& ventana, float dt, bool eventoSaltar);
 
 
 

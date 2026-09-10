@@ -13,6 +13,7 @@ private:
     std::vector<std::shared_ptr<sf::Texture>> cargarTexturaFondo;
     std::vector<sf::Sprite> spritesSuelo;
     std::vector<sf::Sprite> spritesCielo;
+    std::vector<sf::Sprite> spritesMontañas;
     sf::Sprite cielo;
     sf::Sprite montaña;
     sf::Sprite suelo;

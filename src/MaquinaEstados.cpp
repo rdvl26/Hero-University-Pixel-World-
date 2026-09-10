@@ -7,26 +7,33 @@ void MaquinaEstados::cambiarEstado(Estados nuevoEstado){
     }
 }
 
-void MaquinaEstados::actualizar(sf::RenderWindow& ventana, float dt){
+void MaquinaEstados::actualizar(sf::RenderWindow& ventana, float dt, bool eventoSaltar){
 
     teclaW = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
     teclaA = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
     teclaS = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
     teclaD = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
-    if(teclaA && !teclaD){
-        cambiarEstado(Estados::CaminarIzq);
-        izq = true;
-        der = false;
-    }else if(teclaD && !teclaA){
-        cambiarEstado(Estados::CaminarDer);
-        izq = false;
-        der = true;
-    }else{
-        estadoActual = Estados::Quieto;
+    estaEnSuelo =  jugador->listaColisiones->tocaSuelo();
+    if(eventoSaltar && estaEnSuelo){
+            cambiarEstado(Estados::SaltoVertical);
+            jugador->iniciarSalto();
+    }else if(!estaEnSuelo || (estadoActual == Estados::SaltoVertical && jugador->getVelocidadY() > 0.5f)){
+            cambiarEstado(Estados::SaltoVertical);
+    }else if(estaEnSuelo){
+            if(teclaA && !teclaD && estaEnSuelo){
+            cambiarEstado(Estados::CaminarIzq);
+            izq = true;
+            der = false;
+        }else if(teclaD && !teclaA && jugador->listaColisiones->tocaSuelo()){
+            cambiarEstado(Estados::CaminarDer);
+            izq = false;
+            der = true;
+        }else{
+            estadoActual = Estados::Quieto;
+        }
     }
 
-    switch (estadoActual)
-    {
+    switch (estadoActual){
   
     case Estados::CaminarIzq:
         jugador->movimientoIzq(ventana, dt);
@@ -40,7 +47,13 @@ void MaquinaEstados::actualizar(sf::RenderWindow& ventana, float dt){
         }else{
             jugador->quietoDer(ventana,dt);
         }
-        
+        break;
+    case Estados::SaltoVertical:
+        if(izq){
+            jugador->saltar(ventana, dt, -1.0f);
+        }else{
+            jugador->saltar(ventana,dt,1.0f);
+        }
         break;
     }
 }
