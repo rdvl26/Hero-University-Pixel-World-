@@ -15,7 +15,7 @@ class Diseño{
         sf::Texture textura;
     
     public:
-        Diseño(float posicionX, float posicionY,std::string rutaImagen, float alto, float ancho);
+        Diseño(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto);
 
         virtual ~Diseño();
         

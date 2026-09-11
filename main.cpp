@@ -5,7 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include "include/Jugador.hpp"
 #include "include/Enemigos.hpp"
-#include "include/cargarFondos.hpp"
 #include "include/Fondo.hpp"
 #include "include/Enemigos.hpp"
 #include "include/Plataformas.hpp"
@@ -29,10 +28,11 @@ int main (){
     ContactListener listaContactos;
     mundo->SetContactListener(&listaContactos);
 
-    Jugador player(640.0f,510.0f,"assets/JUGADOR.png",71,104,"Principal", mundo, &listaContactos);
-    player.setAnchoSalto_setAltoSalto(76, 104.5);
+    Jugador player(640.0f,510.0f,"assets/JUGADOR.png",71,104,"Principal", mundo, &listaContactos, ventana.getSize().x, ventana.getSize().y);
+    //posX, posY, rutaImagen, anchoImagen, AltoImagen, nombreJugador, mundoBox2D, verificadorDeContactos
+    player.setAnchoSalto_setAltoSalto(76, 104.5); //Imagen del salto mas grande
     listaContactos.setSensor(player.getSensor()); //obtener el sensor de los pies
-    Fondo fondos(cargarFondo(), mundo);
+    Fondo fondos(mundo, ventana.getSize().x, ventana.getSize().y);
 
     while(ventana.isOpen()){
         dt = reloj.restart().asSeconds();

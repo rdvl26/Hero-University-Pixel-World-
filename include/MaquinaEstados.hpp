@@ -3,15 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+
     class Jugador;
 
     enum class Estados{
         Quieto,
         CaminarIzq,
         CaminarDer,
-        SaltoVertical,
-        SaltoDerecha,
-        SaltoIzquierda,
+        Salto,
         Agacharse,
         Combate
     };
@@ -27,7 +26,6 @@
         bool izq = false, der = true;
         bool estaEnSuelo = false;
         bool estaEnElAire = false;
-        float escalaX;
 
         public:
         MaquinaEstados(Jugador* j): jugador(j){}

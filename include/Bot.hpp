@@ -18,8 +18,6 @@ class Bot : public Diseño{
         sf::IntRect recorte;
         float contador;
         int animacionX, animacionY;
-        float altoFrame;
-        float anchoFrame;
     public:
         
         Bot(float posicionX, float posicionY, std::string rutaImagen, float ancho, float alto );
@@ -36,7 +34,7 @@ class Bot : public Diseño{
 
         int getVida();
 
-        int setVida();
+        void setVida(int vida);
 
 };
 

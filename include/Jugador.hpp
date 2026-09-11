@@ -19,6 +19,9 @@ class Jugador : public Bot{
         sf::View vista;
         int centroVistaX, centroVistaY;
         int limiteDerecho; //Longitud del mapa en X.
+
+        Conversiones conversion;
+
         //maquina de estados que decide el metodo a ejecutar
         MaquinaEstados maquinaEstado;
         //Detectar que está tocando el jugador
@@ -34,7 +37,7 @@ class Jugador : public Bot{
     public:
         
 
-        Jugador(float posicionX, float posicionY,std::string rutaImagen,float alto, float ancho , std::string nombre, std::shared_ptr<b2World> mundo, ContactListener* listaColisiones);
+        Jugador(float posicionX, float posicionY,std::string rutaImagen,float alto, float ancho , std::string nombre, std::shared_ptr<b2World> mundo, ContactListener* listaColisiones, float anchoVentana, float altoVentana);
         
         ~Jugador() override;
         
