@@ -36,7 +36,7 @@ class Bot : public Diseño{
 
         int getVida();
 
-        int setVida();
+        void setVida(int vida);
 
 };
 

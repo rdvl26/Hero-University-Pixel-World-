@@ -1,8 +1,8 @@
 #include "../include/Jugador.hpp"
 
-Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float alto, float ancho , std::string nombre, std::shared_ptr<b2World> mundo ,ContactListener* listaColisiones) :nombre(nombre), listaColisiones(listaColisiones),Bot(posicionX, posicionY, rutaImagen,alto,ancho), maquinaEstado(this){
+Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float ancho, float alto , std::string nombre, std::shared_ptr<b2World> mundo ,ContactListener* listaColisiones, float anchoVentana, float altoVentana) :nombre(nombre), listaColisiones(listaColisiones),Bot(posicionX, posicionY, rutaImagen,ancho,alto), maquinaEstado(this), conversion(anchoVentana, altoVentana){
             sprite.setScale(1.15f,1.15f);
-            sprite.setOrigin(ancho/2.0 , alto/2.0);
+            sprite.setOrigin(ancho /2.0 , alto/2.0);
             vista.setSize(1280,720);
             limiteDerecho = 3000;
             centroVistaX = 640;
@@ -12,16 +12,15 @@ Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float a
             impulsoSalto.y = 0.0f;
             anchoFrameSalto = ancho;
             altoFrameSalto = alto;
-            
             b2BodyDef defCuerpoJugador;
             defCuerpoJugador.type = b2_dynamicBody;
             defCuerpoJugador.fixedRotation = true;
-            defCuerpoJugador.position.Set(centroX_box2D(posicionX,ancho * sprite.getScale().x), centroY_box2D(posicionY,alto * sprite.getScale().y));
+            defCuerpoJugador.position.Set(conversion.centroX_box2D(posicionX,ancho * sprite.getScale().x),conversion.centroY_box2D(posicionY,alto * sprite.getScale().y));
 
             cuerpoJugador = mundo->CreateBody(&defCuerpoJugador);
 
             b2PolygonShape formaJugador;
-            formaJugador.SetAsBox(mitadAnchoBox2D(ancho), mitadAltoBox2D(alto));
+            formaJugador.SetAsBox(conversion.mitadAnchoBox2D(ancho),conversion.mitadAltoBox2D(alto));
 
             b2FixtureDef fixJugador;
             fixJugador.shape = &formaJugador;
@@ -30,7 +29,7 @@ Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float a
             cuerpoJugador->CreateFixture(&fixJugador);
 
             b2PolygonShape formaPies;                                                               //centro sensor
-            formaPies.SetAsBox(mitadAnchoBox2D(ancho - 4), 0.05f, b2Vec2(0, - (mitadAltoBox2D(alto)  + 0.025)), 0.0f);
+            formaPies.SetAsBox(conversion.mitadAnchoBox2D(ancho - 4), 0.05f, b2Vec2(0, - (conversion.mitadAltoBox2D(alto)  + 0.025)), 0.0f);
             
             b2FixtureDef fixPies;
             fixPies.shape = &formaPies;
@@ -42,7 +41,6 @@ Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float a
 Jugador::~Jugador(){}
 
 void Jugador::movimientoDer(sf::RenderWindow& ventana,float& dt){
-    sprite.setScale(1.0f, 1.0f);
     if(listaColisiones->tocaSuelo()){
         //aplicar velocidad apenas se presione la tecla
         contador+=dt;
@@ -77,14 +75,14 @@ void Jugador::movimientoDer(sf::RenderWindow& ventana,float& dt){
     }
     pos = cuerpoJugador->GetPosition();
 
-    if (box2d_sfml_x(pos.x) > limiteDerecho - anchoFrame) {
-        pos.x = (limiteDerecho - anchoFrame)/escala; // añadir funciones a conversiones
+    if (conversion.box2d_sfml_x(pos.x) > limiteDerecho - anchoFrame) {
+        pos.x = (limiteDerecho - anchoFrame)/conversion.getEscala(); // añadir funciones a conversiones
     }
-    if (box2d_sfml_x(pos.x) < 0) {
-        pos.x = (limiteDerecho - anchoFrame)/ escala;
+    if (conversion.box2d_sfml_x(pos.x) < 0) {
+        pos.x = (limiteDerecho - anchoFrame)/ conversion.getEscala();
     }
 
-    sprite.setPosition(box2d_sfml_x(pos.x), box2d_sfml_y(pos.y));
+    sprite.setPosition(conversion.box2d_sfml_x(pos.x), conversion.box2d_sfml_y(pos.y));
 
     centroVistaX = sprite.getPosition().x;
 
@@ -98,7 +96,6 @@ void Jugador::movimientoDer(sf::RenderWindow& ventana,float& dt){
 }
 
 void Jugador::movimientoIzq(sf::RenderWindow& ventana, float& dt){
-    sprite.setScale(1.0f, 1.0f);
     if (listaColisiones->tocaSuelo()) {
 
         vel = cuerpoJugador->GetLinearVelocity();
@@ -130,13 +127,13 @@ void Jugador::movimientoIzq(sf::RenderWindow& ventana, float& dt){
 
         pos = cuerpoJugador->GetPosition();
 
-        if (box2d_sfml_x(pos.x) > limiteDerecho - anchoFrame) {
-            pos.x = (limiteDerecho - anchoFrame)/ escala;
+        if (conversion.box2d_sfml_x(pos.x) > limiteDerecho - anchoFrame) {
+            pos.x = (limiteDerecho - anchoFrame)/ conversion.getEscala();
         }
-        if (box2d_sfml_x(pos.x) < 1) {
+        if (conversion.box2d_sfml_x(pos.x) < 1) {
             pos.x = 1;
         }
-    sprite.setPosition(box2d_sfml_x(pos.x) , box2d_sfml_y(pos.y));
+    sprite.setPosition(conversion.box2d_sfml_x(pos.x) , conversion.box2d_sfml_y(pos.y));
 
     centroVistaX = sprite.getPosition().x;
 
@@ -161,37 +158,36 @@ void Jugador::iniciarSalto(){
             contador = 0;
         }
         
-    sprite.setPosition(box2d_sfml_x(cuerpoJugador->GetPosition().x) , box2d_sfml_y(cuerpoJugador->GetPosition().y));
+    sprite.setPosition(conversion.box2d_sfml_x(cuerpoJugador->GetPosition().x) , conversion.box2d_sfml_y(cuerpoJugador->GetPosition().y));
 
 }
 
-void Jugador::saltar(sf::RenderWindow& ventana, float& dt, float escalaX){
-    sprite.setScale(escalaX, 1.0f);
+void Jugador::saltar(sf::RenderWindow& ventana, float& dt, float recorteAnimacionColumna){
         contador += dt;
 
          if(contador < 0.20){
-            recorte = sf::IntRect(animacionX = 0,animacionY = altoFrameSalto*4,anchoFrameSalto,altoFrameSalto);
+            recorte = sf::IntRect(animacionX = 0,animacionY = altoFrameSalto*(4 + recorteAnimacionColumna), anchoFrameSalto,altoFrameSalto);
             sprite.setTextureRect(recorte);
         }else if(contador < 0.33){
-            recorte = sf::IntRect(animacionX = anchoFrameSalto,animacionY = altoFrameSalto*4,anchoFrameSalto,altoFrameSalto);
+            recorte = sf::IntRect(animacionX = anchoFrameSalto,animacionY = altoFrameSalto*(4 + recorteAnimacionColumna),anchoFrameSalto,altoFrameSalto);
             sprite.setTextureRect(recorte);
             
         }else if(contador < 0.46){
-            recorte = sf::IntRect(animacionX = anchoFrameSalto*2,animacionY = altoFrameSalto*4,anchoFrameSalto,altoFrameSalto);
+            recorte = sf::IntRect(animacionX = anchoFrameSalto*2,animacionY = altoFrameSalto*(4 + recorteAnimacionColumna),anchoFrameSalto,altoFrameSalto);
             sprite.setTextureRect(recorte);
         }else if(contador < 0.59){
-            recorte = sf::IntRect(animacionX = anchoFrameSalto*3,animacionY = altoFrameSalto*4,anchoFrameSalto,altoFrameSalto);
+            recorte = sf::IntRect(animacionX = anchoFrameSalto*3,animacionY = altoFrameSalto*(4 + recorteAnimacionColumna),anchoFrameSalto,altoFrameSalto);
             sprite.setTextureRect(recorte);
         }else if(contador < 0.72){
-            recorte = sf::IntRect(animacionX = anchoFrameSalto*4,animacionY = altoFrameSalto*4,anchoFrameSalto,altoFrameSalto);
+            recorte = sf::IntRect(animacionX = anchoFrameSalto*4,animacionY = altoFrameSalto*(4 + recorteAnimacionColumna),anchoFrameSalto,altoFrameSalto);
             sprite.setTextureRect(recorte);
         }else if(contador < 0.85){
-            recorte = sf::IntRect(animacionX = anchoFrameSalto*5,animacionY = altoFrameSalto*4,anchoFrameSalto,altoFrameSalto);
+            recorte = sf::IntRect(animacionX = anchoFrameSalto*5,animacionY = altoFrameSalto*(4 + recorteAnimacionColumna),anchoFrameSalto,altoFrameSalto);
             sprite.setTextureRect(recorte);
             contador = 0;
         }
         
-        sprite.setPosition(box2d_sfml_x(cuerpoJugador->GetPosition().x) , box2d_sfml_y(cuerpoJugador->GetPosition().y));
+        sprite.setPosition(conversion.box2d_sfml_x(cuerpoJugador->GetPosition().x) , conversion.box2d_sfml_y(cuerpoJugador->GetPosition().y));
 
         centroVistaX = sprite.getPosition().x;
 
@@ -208,6 +204,7 @@ void Jugador::saltar(sf::RenderWindow& ventana, float& dt, float escalaX){
 b2Fixture* Jugador::getSensor(){
     return sensorPies;
 }
+
 void Jugador::interactuar(float posicionX, float posicionY){
 
 }
@@ -240,7 +237,7 @@ void Jugador::quietoDer(sf::RenderWindow& ventana,float& dt){
         contador = 0;
     }
     
-    sprite.setPosition(box2d_sfml_x(cuerpoJugador->GetPosition().x), box2d_sfml_y(cuerpoJugador->GetPosition().y));
+    sprite.setPosition(conversion.box2d_sfml_x(cuerpoJugador->GetPosition().x), conversion.box2d_sfml_y(cuerpoJugador->GetPosition().y));
 
 }
 
@@ -271,7 +268,7 @@ void Jugador::quietoIzq(sf::RenderWindow& ventana,float& dt){
         contador = 0;
     }
     
-    sprite.setPosition(box2d_sfml_x(cuerpoJugador->GetPosition().x), box2d_sfml_y(cuerpoJugador->GetPosition().y));
+    sprite.setPosition(conversion.box2d_sfml_x(cuerpoJugador->GetPosition().x), conversion.box2d_sfml_y(cuerpoJugador->GetPosition().y));
 
 
 }
@@ -288,6 +285,7 @@ void Jugador::dibujarTodo(sf::RenderWindow& ventana){
     Diseño::dibujarTodo(ventana);
     ventana.setView(vista);
 }
+
 std::string Jugador::getNombre(){
     return nombre;
 }

@@ -1,6 +1,7 @@
 #include "../include/MaquinaEstados.hpp"
 #include "../include/Jugador.hpp"
 
+
 void MaquinaEstados::cambiarEstado(Estados nuevoEstado){
     if(estadoActual != nuevoEstado){
         estadoActual = nuevoEstado;
@@ -15,10 +16,10 @@ void MaquinaEstados::actualizar(sf::RenderWindow& ventana, float dt, bool evento
     teclaD = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
     estaEnSuelo =  jugador->listaColisiones->tocaSuelo();
     if(eventoSaltar && estaEnSuelo){
-            cambiarEstado(Estados::SaltoVertical);
+            cambiarEstado(Estados::Salto);
             jugador->iniciarSalto();
-    }else if(!estaEnSuelo || (estadoActual == Estados::SaltoVertical && jugador->getVelocidadY() > 0.5f)){
-            cambiarEstado(Estados::SaltoVertical);
+    }else if(!estaEnSuelo || (estadoActual == Estados::Salto && jugador->getVelocidadY() > 0.5f)){
+            cambiarEstado(Estados::Salto);
     }else if(estaEnSuelo){
             if(teclaA && !teclaD && estaEnSuelo){
             cambiarEstado(Estados::CaminarIzq);
@@ -48,11 +49,11 @@ void MaquinaEstados::actualizar(sf::RenderWindow& ventana, float dt, bool evento
             jugador->quietoDer(ventana,dt);
         }
         break;
-    case Estados::SaltoVertical:
+    case Estados::Salto:
         if(izq){
-            jugador->saltar(ventana, dt, -1.0f);
+            jugador->saltar(ventana, dt, 1.025);
         }else{
-            jugador->saltar(ventana,dt,1.0f);
+            jugador->saltar(ventana,dt,0);
         }
         break;
     }
