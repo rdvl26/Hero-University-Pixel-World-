@@ -20,6 +20,7 @@ int main (){
     sf::Clock reloj;
     float dt; //Cambio del tiempo entre frame
     Jugador player(640.0f,485.0f,"assets/JUGADOR.png",71,104,"Principal");
+    Enemigos Enemigo1(940.0f, 485.0f, "assets/Enemigo.png", 104, 71, 1, 100);
     Fondo fondos(cargarFondo());
 
     while(ventana.isOpen()){
@@ -30,12 +31,15 @@ int main (){
             if(evento.type == sf::Event::Closed) //Evento de cerrar la ventana
                 ventana.close();
         }
+
         player.actualizar(ventana, dt);
+        Enemigo1.Patrullaje(dt);
+        
         ventana.clear(sf::Color(51,153,255)); //Borrar el anterior FRAME y poner un fondo
         //Lo que dibujara en cada FRAME
-        
         fondos.dibujarTodo(ventana);
         player.dibujarTodo(ventana);
+        Enemigo1.dibujarTodo(ventana);
         ventana.display(); //Dibujar nuevo FRAME
     }
 

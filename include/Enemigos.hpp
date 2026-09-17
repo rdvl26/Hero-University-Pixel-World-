@@ -9,11 +9,14 @@ class Enemigos : public Bot{
 
     protected:
         int tipo;
+        bool Caminata=true;
 
     public:
-        Enemigos(float posicionX, float posicionY,std::string rutaImagen, float alto, float ancho, int tipo, int vida);
+        Enemigos(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto, int tipo, int vida);
 
         ~Enemigos() override;
+
+        void Patrullaje(float &dt);
 
         bool estaVivo();
 
