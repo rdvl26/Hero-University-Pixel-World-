@@ -27,8 +27,6 @@ class Jugador : public Bot{
         //Detectar que está tocando el jugador
 
         b2Body* cuerpoJugador;
-        b2Vec2 vel;
-        b2Vec2 pos;
         b2Vec2 impulsoSalto;
         //Sensor que dirá si el jugador toca el suelo
         b2Fixture* sensorPies;

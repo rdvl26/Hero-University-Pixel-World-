@@ -33,6 +33,7 @@ int main (){
     player.setAnchoSalto_setAltoSalto(76, 104.5); //Imagen del salto mas grande
     listaContactos.setSensor(player.getSensor()); //obtener el sensor de los pies
     Fondo fondos(mundo, ventana.getSize().x, ventana.getSize().y);
+    Enemigos Enemigo1(940.0f, 485.0f, "assets/Enemigo.png", 71, 104, 1, 100, mundo, ventana.getSize().x, ventana.getSize().y);
 
     while(ventana.isOpen()){
         dt = reloj.restart().asSeconds();
@@ -49,11 +50,15 @@ int main (){
         }
 
         mundo->Step(1.0f/60.0f,8,3);
+
         player.actualizar(ventana, dt, eventoSaltar);
+        Enemigo1.Patrullaje(dt);
+        
         ventana.clear(sf::Color(51,153,255)); //Borrar el anterior FRAME y poner un fondo
         //Lo que dibujara en cada FRAME
         fondos.dibujarTodo(ventana);
         player.dibujarTodo(ventana);
+        Enemigo1.dibujarTodo(ventana);
         ventana.display(); //Dibujar nuevo FRAME
         
     }

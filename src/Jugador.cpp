@@ -75,11 +75,11 @@ void Jugador::movimientoDer(sf::RenderWindow& ventana,float& dt){
     }
     pos = cuerpoJugador->GetPosition();
 
-    if (conversion.box2d_sfml_x(pos.x) > limiteDerecho - ancho) {
-        pos.x = (limiteDerecho - ancho)/conversion.getEscala(); // añadir funciones a conversiones
+    if (conversion.box2d_sfml_x(pos.x) > limiteDerecho - anchoFrame) {
+        pos.x = (limiteDerecho - anchoFrame)/conversion.getEscala(); // añadir funciones a conversiones
     }
     if (conversion.box2d_sfml_x(pos.x) < 0) {
-        pos.x = (limiteDerecho - ancho)/ conversion.getEscala();
+        pos.x = (limiteDerecho - anchoFrame)/ conversion.getEscala();
     }
 
     sprite.setPosition(conversion.box2d_sfml_x(pos.x), conversion.box2d_sfml_y(pos.y));
@@ -127,8 +127,8 @@ void Jugador::movimientoIzq(sf::RenderWindow& ventana, float& dt){
 
         pos = cuerpoJugador->GetPosition();
 
-        if (conversion.box2d_sfml_x(pos.x) > limiteDerecho - ancho) {
-            pos.x = (limiteDerecho - ancho)/ conversion.getEscala();
+        if (conversion.box2d_sfml_x(pos.x) > limiteDerecho - anchoFrame) {
+            pos.x = (limiteDerecho - anchoFrame)/ conversion.getEscala();
         }
         if (conversion.box2d_sfml_x(pos.x) < 1) {
             pos.x = 1;

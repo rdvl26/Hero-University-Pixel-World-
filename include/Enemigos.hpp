@@ -3,17 +3,26 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <box2d/box2d.h>
+#include <memory>
 
 #include "Bot.hpp"
+#include "conversiones.hpp"
 
 class Enemigos : public Bot{
 
     protected:
         int tipo;
+        bool caminata;
+        b2Body* cuerpoEnemigo;
+        Conversiones conversiones;
 
     public:
-        Enemigos(float posicionX, float posicionY,std::string rutaImagen, float alto, float ancho, int tipo, int vida);
+        Enemigos(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto, int tipo, int vida , std::shared_ptr<b2World> mundo, float anchoVentana, float altoVentana);
+
         ~Enemigos() override;
+
+        void Patrullaje(float &dt);
 
         bool estaVivo();
 

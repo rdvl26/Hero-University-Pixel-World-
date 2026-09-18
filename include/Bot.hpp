@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <box2d/box2d.h>
 #include "Diseño.hpp"
 
 
@@ -18,6 +19,12 @@ class Bot : public Diseño{
         sf::IntRect recorte;
         float contador;
         int animacionX, animacionY;
+        float altoFrame;
+        float anchoFrame;
+
+        b2Vec2 vel;
+        b2Vec2 pos;
+
     public:
         
         Bot(float posicionX, float posicionY, std::string rutaImagen, float ancho, float alto );
