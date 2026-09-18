@@ -9,7 +9,7 @@ class Enemigos : public Bot{
 
     protected:
         int tipo;
-        bool Caminata=true;
+        bool caminata;
 
     public:
         Enemigos(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto, int tipo, int vida);
