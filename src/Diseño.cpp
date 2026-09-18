@@ -1,13 +1,13 @@
 #include "../include/Diseño.hpp"
 
-    Diseño::Diseño(float posicionX, float posicionY,std::string rutaImagen, float alto, float ancho): posicionX(posicionX),posicionY(posicionY),alto(alto),ancho(ancho){
+    Diseño::Diseño(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto): posicionX(posicionX),posicionY(posicionY),ancho(ancho),alto(alto){
             this->textura.loadFromFile(rutaImagen);
             sprite.setTexture(textura);
             sprite.setPosition(posicionX,posicionY);
         }
 
     Diseño::~Diseño(){
-        
+    
     }
     float Diseño::getPosicionX(){
             return posicionX;

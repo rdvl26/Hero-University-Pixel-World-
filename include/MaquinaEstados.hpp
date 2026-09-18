@@ -3,13 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+
     class Jugador;
 
     enum class Estados{
         Quieto,
         CaminarIzq,
         CaminarDer,
-        Saltar,
+        Salto,
         Agacharse,
         Combate
     };
@@ -22,7 +23,9 @@
         bool teclaA;
         bool teclaS;
         bool teclaD;
-        bool izq = false, der = false;
+        bool izq = false, der = true;
+        bool estaEnSuelo = false;
+        bool estaEnElAire = false;
 
         public:
         MaquinaEstados(Jugador* j): jugador(j){}
@@ -31,7 +34,7 @@
 
         Estados getEstado() const;
 
-        void actualizar(sf::RenderWindow& ventana, float dt);
+        void actualizar(sf::RenderWindow& ventana, float dt, bool eventoSaltar);
 
 
 

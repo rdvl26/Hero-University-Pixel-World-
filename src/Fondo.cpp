@@ -1,29 +1,70 @@
 #include "../include/Fondo.hpp"
 
-Fondo::Fondo(std::vector<std::string> ruta){
-        this->posX_suelo = 0;
-        //Cargar fondos en la GPU
-        for(auto& rect: ruta){
-            cargarTexturaFondo.emplace_back();
-            cargarTexturaFondo.back().loadFromFile(rect);
-        }
+//AGREGAR UNA PARED INVISIBLE EN LOS LATERALES
 
-       for(int i = 0; i < 20; i++){
-        cielo.setTexture(cargarTexturaFondo[0]);
-        cielo.setScale(1.5f,1.5f);
-        cielo.setPosition(0+192*i,0);
-        spritesCielo.push_back(cielo);
-       }
+void Fondo::cargarFondo(){
+    rutafondos.reserve(2);
+    rutafondos.emplace_back("assets/cielo.png");
+    rutafondos.emplace_back("assets/piso.png");
+    rutafondos.emplace_back("assets/montañas.png");
+}
 
-       for(int i = 0; i < 20; i++){
-            suelo.setTexture(cargarTexturaFondo[1]);
-            suelo.setScale(1.5f,1.5f);
-            suelo.setPosition(posX_suelo + 192*i,528);
-            spritesSuelo.push_back(suelo);
-       }
-       montaña.setTexture(cargarTexturaFondo[2]);
-       montaña.setScale(2.0f,2.0f);
-       montaña.setPosition(0,0);
+Fondo::Fondo(std::shared_ptr<b2World> mundo, float anchoVentana, float alturaVentana) : conversiones(anchoVentana, alturaVentana){
+    this->posX_suelo = 0;
+    cargarFondo();
+    
+    //Cargar fondos en la GPU
+    for(auto& r: rutafondos){
+        std::shared_ptr<sf::Texture> textura = std::make_shared<sf::Texture>();
+        textura->loadFromFile(r);
+        cargarTexturaFondo.emplace_back(std::move(textura)); //mover el recurso de textura al vector
+    }
+
+    //Cielo
+
+    for(int i = 0; i < 20; i++){
+    cielo.setTexture(*cargarTexturaFondo[0]);
+    if(i == 0) //solo asignar una vez
+        tamañoImagen_Cielo = cielo.getGlobalBounds();
+    cielo.setScale(1.5f,1.5f);
+    cielo.setPosition(tamañoImagen_Cielo.width *i ,0);
+    spritesCielo.push_back(cielo);
+    }
+
+    
+
+    //Suelo
+
+    for(int i = 0; i < MosaicosSuelos; i++){
+    
+        spritesSuelo.emplace_back(suelo);
+        spritesSuelo.back().setTexture(*cargarTexturaFondo[1]);
+        if(i == 0)
+            tamañoImagen_Suelo = spritesSuelo.back().getGlobalBounds();
+        spritesSuelo.back().setScale(1.5f,1.5f);
+        spritesSuelo.back().setPosition(posX_suelo + (tamañoImagen_Suelo.width*i),528);
+    }
+
+    b2BodyDef defSuelo;
+    defSuelo.type = b2_staticBody;
+    //para la posicion en Box2D se necesita el centro y en metros
+    defSuelo.position.Set(conversiones.centroX_box2D(posX_suelo, tamañoImagen_Suelo.width * MosaicosSuelos), conversiones.centroY_box2D(600, 200));
+
+    cuerpoSuelo= mundo->CreateBody(&defSuelo);
+    
+    b2PolygonShape formaSuelo;
+    formaSuelo.SetAsBox(conversiones.mitadAnchoBox2D(tamañoImagen_Suelo.width * MosaicosSuelos), conversiones.mitadAltoBox2D(200));
+  
+    cuerpoSuelo->CreateFixture(&formaSuelo, 0.0f);
+
+    //montaña
+    
+    for(int i = 0; i < 5; i++){
+        montaña.setTexture(*cargarTexturaFondo[2]);
+        montaña.setScale(2.0f,2.0f);
+        montaña.setPosition(1280 * i,0);
+        spritesMontañas.push_back(montaña);
+    }
 }
 
 void Fondo::dibujarTodo(sf::RenderWindow& ventana){
@@ -35,8 +76,9 @@ void Fondo::dibujarTodo(sf::RenderWindow& ventana){
         for(i = 0; i < spritesSuelo.size(); i++){
             ventana.draw(spritesSuelo[i]);
         }
-        ventana.draw(montaña);
-       
+        for(i = 0; i < spritesMontañas.size(); i++){
+            ventana.draw(spritesMontañas[i]);
+        }
 }
 
 

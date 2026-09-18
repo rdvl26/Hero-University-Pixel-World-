@@ -1,20 +1,20 @@
-#ifndef AMADO_HPP
-#define AMADO_HPP
+#ifndef NPC_HPP
+#define NPC_HPP
 
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "Diseño.hpp"
 
-class Amado : public Diseño{
+class NPC : public Diseño{
 
     protected:
         std::string nombre;
         int estado;
 
     public:
-        Amado( float posicionX, float posicionY,std::string rutaImagen, float alto, float ancho, std::string nombre);
+        NPC( float posicionX, float posicionY,std::string rutaImagen, float alto, float ancho, std::string nombre);
 
-        ~Amado() override;
+        ~NPC() override;
         
         void pedirAyuda();
         
