@@ -1,6 +1,6 @@
 #include "../include/Jugador.hpp"
 
-Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float ancho, float alto , std::string nombre, std::shared_ptr<b2World> mundo ,ContactListener* listaColisiones, float anchoVentana, float altoVentana) :nombre(nombre), listaColisiones(listaColisiones),Bot(posicionX, posicionY, rutaImagen,ancho,alto), maquinaEstado(this), conversion(anchoVentana, altoVentana){
+Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float ancho, float alto , std::string nombre, std::shared_ptr<b2World> mundo ,ContactListener* listaColisiones, float anchoVentana, float altoVentana) :nombre(nombre), listaColisiones(listaColisiones),Bot(posicionX, posicionY, rutaImagen,ancho,alto), conversion(anchoVentana, altoVentana){
             sprite.setScale(1.15f,1.15f);
             sprite.setOrigin(ancho /2.0 , alto/2.0);
             vista.setSize(1280,720);
@@ -12,6 +12,9 @@ Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float a
             impulsoSalto.y = 0.0f;
             anchoFrameSalto = ancho;
             altoFrameSalto = alto;
+
+            estadoActual = Estados::Quieto;
+
             b2BodyDef defCuerpoJugador;
             defCuerpoJugador.type = b2_dynamicBody;
             defCuerpoJugador.fixedRotation = true;
@@ -40,35 +43,50 @@ Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float a
 
 Jugador::~Jugador(){}
 
-void Jugador::movimientoDer(sf::RenderWindow& ventana,float& dt){
+void Jugador::movimientos(float& dt, bool derecha){
+
     if(listaColisiones->tocaSuelo()){
+
         //aplicar velocidad apenas se presione la tecla
         contador+=dt;
-        vel = cuerpoJugador->GetLinearVelocity();
-        vel.x = 5.0;
-        cuerpoJugador->SetLinearVelocity(vel);
+
+        if(derecha){
+            posRecorte = 0;
+
+            vel = cuerpoJugador->GetLinearVelocity();
+            vel.x = 5.0;
+            cuerpoJugador->SetLinearVelocity(vel);
+        }
+        else{
+            posRecorte = 1;
+            vel = cuerpoJugador->GetLinearVelocity();
+            vel.x = -5.0;
+            cuerpoJugador->SetLinearVelocity(vel);
+        }
+        
+        
         
         if(contador < 0.20){
-            recorte = sf::IntRect(animacionX = 0,animacionY = 0,ancho,alto);
+            recorte = sf::IntRect(animacionX = 0,animacionY = alto* posRecorte,ancho,alto);
             sprite.setTextureRect(recorte);
         }else if(contador < 0.33){
-            recorte = sf::IntRect(animacionX = ancho,animacionY = 0,ancho,alto);
+            recorte = sf::IntRect(animacionX = ancho,animacionY = alto*posRecorte,ancho,alto);
             sprite.setTextureRect(recorte);
             
         }else if(contador < 0.46){
-            recorte = sf::IntRect(animacionX = ancho*2,animacionY = 0,ancho,alto);
+            recorte = sf::IntRect(animacionX = ancho*2,animacionY = alto*posRecorte,ancho,alto);
             sprite.setTextureRect(recorte);
             
         }else if(contador < 0.59){
-            recorte = sf::IntRect(animacionX = ancho*3,animacionY = 0,ancho,alto);
+            recorte = sf::IntRect(animacionX = ancho*3,animacionY = alto*posRecorte,ancho,alto);
             sprite.setTextureRect(recorte);
 
         }else if(contador < 0.72){
-            recorte = sf::IntRect(animacionX = ancho*4,animacionY = 0,ancho,alto);
+            recorte = sf::IntRect(animacionX = ancho*4,animacionY = alto*posRecorte,ancho,alto);
             sprite.setTextureRect(recorte);
             
         }else if(contador < 0.85){
-            recorte = sf::IntRect(animacionX = ancho*5,animacionY = 0,ancho,alto);
+            recorte = sf::IntRect(animacionX = ancho*5,animacionY = alto*posRecorte,ancho,alto);
             sprite.setTextureRect(recorte);
             contador = 0;
         }
@@ -93,57 +111,6 @@ void Jugador::movimientoDer(sf::RenderWindow& ventana,float& dt){
         centroVistaX = limiteDerecho-640;
     }
     vista.setCenter(centroVistaX,centroVistaY);
-}
-
-void Jugador::movimientoIzq(sf::RenderWindow& ventana, float& dt){
-    if (listaColisiones->tocaSuelo()) {
-
-        vel = cuerpoJugador->GetLinearVelocity();
-        vel.x = -5.0;
-        cuerpoJugador->SetLinearVelocity(vel);
-        contador+=dt;
-        if(contador < 0.20){
-            recorte = sf::IntRect(animacionX = 0,animacionY = alto,ancho,alto);
-            sprite.setTextureRect(recorte);
-        }else if(contador < 0.33){
-            recorte = sf::IntRect(animacionX = ancho,animacionY = alto,ancho,alto);
-            sprite.setTextureRect(recorte);
-            
-        }else if(contador < 0.46){
-            recorte = sf::IntRect(animacionX = ancho*2,animacionY = alto,ancho,alto);
-            sprite.setTextureRect(recorte);
-        }else if(contador < 0.59){
-            recorte = sf::IntRect(animacionX = ancho*3,animacionY = alto,ancho,alto);
-            sprite.setTextureRect(recorte);
-        }else if(contador < 0.72){
-            recorte = sf::IntRect(animacionX = ancho*4,animacionY = alto,ancho,alto);
-            sprite.setTextureRect(recorte);
-        }else if(contador < 0.85){
-            recorte = sf::IntRect(animacionX = ancho*5,animacionY = alto,ancho,alto);
-            sprite.setTextureRect(recorte);
-            contador = 0;
-        }
-    }
-
-        pos = cuerpoJugador->GetPosition();
-
-        if (conversion.box2d_sfml_x(pos.x) > limiteDerecho - anchoFrame) {
-            pos.x = (limiteDerecho - anchoFrame)/ conversion.getEscala();
-        }
-        if (conversion.box2d_sfml_x(pos.x) < 1) {
-            pos.x = 1;
-        }
-    sprite.setPosition(conversion.box2d_sfml_x(pos.x) , conversion.box2d_sfml_y(pos.y));
-
-    centroVistaX = sprite.getPosition().x;
-
-    if(centroVistaX < 640){
-        centroVistaX = 640;
-    }
-    if(centroVistaX > limiteDerecho-640){
-        centroVistaX = limiteDerecho-640;
-    }
-    vista.setCenter(centroVistaX ,centroVistaY);
 }
 
 void Jugador::setAnchoSalto_setAltoSalto(float ancho, float alto){
@@ -209,30 +176,36 @@ void Jugador::interactuar(float posicionX, float posicionY){
 
 }
 
-void Jugador::quietoDer(sf::RenderWindow& ventana,float& dt){
+void Jugador::quieto(sf::RenderWindow& ventana,float& dt, bool derecha){
     
+    if(derecha){
+        posRecorte = 0;
+    }else{
+        posRecorte = 1;
+    }
+
     vel = cuerpoJugador->GetLinearVelocity();
     vel.x = 0.0;
     cuerpoJugador->SetLinearVelocity(vel);
     contador+=dt;
 
     if(contador < 0.20){
-        recorte = sf::IntRect(animacionX = 0,animacionY = alto*2,ancho,alto);
+        recorte = sf::IntRect(animacionX = 0,animacionY = alto*(2 + posRecorte),ancho,alto);
         sprite.setTextureRect(recorte);
     }else if(contador < 0.33){
-        recorte = sf::IntRect(animacionX = ancho,animacionY = alto*2,ancho,alto);
+        recorte = sf::IntRect(animacionX = ancho,animacionY = alto*(2 + posRecorte),ancho,alto);
         sprite.setTextureRect(recorte);
     }else if(contador < 0.46){
-        recorte = sf::IntRect(animacionX = ancho*2,animacionY = alto*2,ancho,alto);
+        recorte = sf::IntRect(animacionX = ancho*2,animacionY = alto*(2 + posRecorte),ancho,alto);
         sprite.setTextureRect(recorte);
     }else if(contador < 0.59){
-        recorte = sf::IntRect(animacionX = ancho*3,animacionY = alto*2,ancho,alto);
+        recorte = sf::IntRect(animacionX = ancho*3,animacionY = alto*(2 + posRecorte),ancho,alto);
         sprite.setTextureRect(recorte);
     }else if(contador < 0.72){
-        recorte = sf::IntRect(animacionX = ancho*4,animacionY = alto*2,ancho,alto);
+        recorte = sf::IntRect(animacionX = ancho*4,animacionY = alto*(2 + posRecorte),ancho,alto);
         sprite.setTextureRect(recorte);
     }else if(contador >= 0.72){
-        recorte = sf::IntRect(animacionX = ancho*5,animacionY = alto*2,ancho,alto);
+        recorte = sf::IntRect(animacionX = ancho*5,animacionY = alto*(2 + posRecorte),ancho,alto);
         sprite.setTextureRect(recorte);
         contador = 0;
     }
@@ -241,40 +214,60 @@ void Jugador::quietoDer(sf::RenderWindow& ventana,float& dt){
 
 }
 
-void Jugador::quietoIzq(sf::RenderWindow& ventana,float& dt){
-    contador+=dt;
-    vel = cuerpoJugador->GetLinearVelocity();
-    vel.x = 0.0;
-    cuerpoJugador->SetLinearVelocity(vel);
-
-    if(contador < 0.20){
-        recorte = sf::IntRect(animacionX = 0,animacionY = alto*3,ancho,alto);
-        sprite.setTextureRect(recorte);
-    }else if(contador < 0.33){
-        recorte = sf::IntRect(animacionX = ancho,animacionY = alto*3,ancho,alto);
-        sprite.setTextureRect(recorte);
-    }else if(contador < 0.46){
-        recorte = sf::IntRect(animacionX = ancho*2,animacionY = alto*3,ancho,alto);
-        sprite.setTextureRect(recorte);
-    }else if(contador < 0.59){
-        recorte = sf::IntRect(animacionX = ancho*3,animacionY = alto*3,ancho,alto);
-        sprite.setTextureRect(recorte);
-    }else if(contador < 0.72){
-        recorte = sf::IntRect(animacionX = ancho*4,animacionY = alto*3,ancho,alto);
-        sprite.setTextureRect(recorte);
-    }else if(contador >= 0.72){
-        recorte = sf::IntRect(animacionX = ancho*5,animacionY = alto*3,ancho,alto);
-        sprite.setTextureRect(recorte);
-        contador = 0;
+void Jugador::cambiarEstado(Estados nuevoEstado){
+    if(estadoActual != nuevoEstado){
+        estadoActual = nuevoEstado;
     }
-    
-    sprite.setPosition(conversion.box2d_sfml_x(cuerpoJugador->GetPosition().x), conversion.box2d_sfml_y(cuerpoJugador->GetPosition().y));
-
-
 }
 
 void Jugador::actualizar(sf::RenderWindow& ventana, float& dt, bool eventoSaltar){
-    maquinaEstado.actualizar(ventana, dt, eventoSaltar); //La maquina de estado decide que se ejecutará
+     teclaW = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+    teclaA = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+    teclaS = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+    teclaD = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+    estaEnSuelo =  listaColisiones->tocaSuelo();
+    if(eventoSaltar && estaEnSuelo){
+            cambiarEstado(Estados::Salto);
+            iniciarSalto();
+    }else if(!estaEnSuelo || (estadoActual == Estados::Salto && getVelocidadY() > 0.5f)){
+            cambiarEstado(Estados::Salto);
+    }else if(estaEnSuelo){
+            if(teclaA && !teclaD && estaEnSuelo){
+            cambiarEstado(Estados::CaminarIzq);
+            izq = true;
+            der = false;
+        }else if(teclaD && !teclaA && listaColisiones->tocaSuelo()){
+            cambiarEstado(Estados::CaminarDer);
+            izq = false;
+            der = true;
+        }else{
+            estadoActual = Estados::Quieto;
+        }
+    }
+
+    switch (estadoActual){
+  
+    case Estados::CaminarIzq:
+        movimientos(dt, false);
+        break;
+    case Estados::CaminarDer:
+        movimientos(dt, true);
+        break;
+    case Estados::Quieto:
+        if(izq){
+            quieto(ventana, dt, false);
+        }else{
+            quieto(ventana,dt, true);
+        }
+        break;
+    case Estados::Salto:
+        if(izq){
+            saltar(ventana, dt, 1.025);
+        }else{
+            saltar(ventana,dt,0);
+        }
+        break;
+    }
 }
 
 float Jugador::getVelocidadY(){

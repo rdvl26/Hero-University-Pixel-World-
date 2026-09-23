@@ -28,7 +28,16 @@ Enemigos::~Enemigos(){
 
 }
 
-void Enemigos::movimientos(float &dt, float posObjetivo, float anchoObjetivo, float altoObjetivo, float distanciaClaveObjetivo){
+void Enemigos::actualizar(float& dt, bool derecha, float posObjetivo,float anchoObjetivo,float altoObjetivo,float distanciaClaveObjetivo){
+        this->posObjetivo = posObjetivo;
+        this->anchoObjetivo = anchoObjetivo;
+        this->altoObjetivo = altoObjetivo;
+        this->distanciaClaveObjetivo = distanciaClaveObjetivo;
+
+        movimientos(dt, false);
+}
+
+void Enemigos::movimientos(float &dt, bool derecha){
 
  if((posObjetivo + (anchoObjetivo/2)) > sprite.getPosition().x + distanciaClaveObjetivo || (posObjetivo + (anchoObjetivo/2)) < sprite.getPosition().x - distanciaClaveObjetivo){
         alerta = false;

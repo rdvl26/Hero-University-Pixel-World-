@@ -17,15 +17,18 @@ class Enemigos : public Bot{
         bool alerta;
         b2Body* cuerpoEnemigo;
         Conversiones conversiones;
+        float posObjetivo, anchoObjetivo, altoObjetivo,distanciaClaveObjetivo;
 
     public:
         Enemigos(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto, int tipo, int vida , std::shared_ptr<b2World> mundo, float anchoVentana, float altoVentana);
 
         ~Enemigos() override;
 
-        void movimientos(float &dt, float posObjetivo, float anchoObjetivo, float altoObjetivo , float distanciaClaveObjetivo = 10);
+        void movimientos(float &dt, bool derecha) override;
 
         bool estaVivo();
+
+        void actualizar(float &dt, bool derecha, float posObjetivo,float anchoObjetivo,float altoObjetivo,float distanciaClaveObjetivo);
 
 };
 

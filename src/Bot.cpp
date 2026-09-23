@@ -15,12 +15,9 @@
         
     }
     
-    void Bot::movimientoIzq(sf::RenderWindow& ventana,float& dt){
+    void Bot::movimientos(float& dt, bool derecha){
            
         }
-    void Bot::movimientoDer(sf::RenderWindow& ventana,float& dt){
-           
-    }
 
     void Bot::combate(){
 
