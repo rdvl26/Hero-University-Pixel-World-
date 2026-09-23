@@ -12,7 +12,6 @@ class Bot : public Diseño{
     protected:
         int vida;
         int daño;
-        int velocidad;
         bool vivo;
 
         //Variables para animacion

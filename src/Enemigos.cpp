@@ -3,6 +3,7 @@
 Enemigos::Enemigos(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto, int tipo, int vida, std::shared_ptr<b2World> mundo, float anchoVentana, float altoVentana) : Bot(posicionX, posicionY,rutaImagen, ancho, alto), conversiones(anchoVentana, altoVentana){
 
     caminata = true;
+    alerta = false;
     sprite.setScale(1.15f,1.15f);
     sprite.setOrigin(ancho/2, alto/2);
 
@@ -27,16 +28,34 @@ Enemigos::~Enemigos(){
 
 }
 
-void Enemigos::Patrullaje(float &dt){
+void Enemigos::movimientos(float &dt, float posObjetivo, float anchoObjetivo, float altoObjetivo, float distanciaClaveObjetivo){
 
-    vel = cuerpoEnemigo->GetLinearVelocity();
-    vel.x = 2.0f;
-    cuerpoEnemigo->SetLinearVelocity(vel);
-    velocidad=90;
+ if((posObjetivo + (anchoObjetivo/2)) > sprite.getPosition().x + distanciaClaveObjetivo || (posObjetivo + (anchoObjetivo/2)) < sprite.getPosition().x - distanciaClaveObjetivo){
+        alerta = false;
+    }else{
+        alerta = true;
+        if(posObjetivo + (anchoObjetivo/2) > sprite.getPosition().x + 1){
+            vel.x = 2.0f;
+            cuerpoEnemigo->SetLinearVelocity(vel);
+            caminata = true;
+        }
+        else{
+            vel.x = -2.0f;
+            cuerpoEnemigo->SetLinearVelocity(vel);
+            caminata = false;
+        }
+    }
+  
 
     //Camina a la derecha
-    if(caminata == true){
-        
+    if(caminata){
+        if(!alerta){
+            vel = cuerpoEnemigo->GetLinearVelocity();
+            vel.x = 2.0f;
+            cuerpoEnemigo->SetLinearVelocity(vel);
+
+        }
+       
         contador+=dt;
         if(contador < 0.20){
             recorte = sf::IntRect(animacionX = 0,animacionY = 0,ancho,alto);// 1
@@ -44,7 +63,7 @@ void Enemigos::Patrullaje(float &dt){
         }
         else if(contador < 0.33){
             recorte = sf::IntRect(animacionX = ancho,animacionY = 0,ancho,alto);// 2
-            sprite.setTextureRect(recorte);       
+            sprite.setTextureRect(recorte);
         }
         else if(contador < 0.46){
             recorte = sf::IntRect(animacionX = ancho*2,animacionY = 0,ancho,alto);// 3
@@ -70,7 +89,7 @@ void Enemigos::Patrullaje(float &dt){
 
         sprite.setPosition(conversiones.box2d_sfml_x(pos.x), conversiones.box2d_sfml_y(pos.y));
 
-        if(conversiones.box2d_sfml_x(pos.x) >= 1040){
+        if(conversiones.box2d_sfml_x(pos.x) >= 1040 && !alerta){
             caminata=false;// cambiamos a falso para podercaminar a la izquierda
         }
         
@@ -80,8 +99,11 @@ void Enemigos::Patrullaje(float &dt){
     else{
 
         contador+=dt;
-        vel.x = -2.0f;
-        cuerpoEnemigo->SetLinearVelocity(vel);
+        if(!alerta){
+            vel.x = -2.0f;
+            cuerpoEnemigo->SetLinearVelocity(vel);
+        }
+        
         if(contador < 0.20){
             recorte = sf::IntRect(animacionX = ancho,animacionY = 0,-ancho,alto);// 1
             sprite.setTextureRect(recorte);
@@ -115,13 +137,14 @@ void Enemigos::Patrullaje(float &dt){
         sprite.setPosition(conversiones.box2d_sfml_x(pos.x), conversiones.box2d_sfml_y(pos.y));
 
 
-        if(conversiones.box2d_sfml_x(pos.x) <= 840){
+        if(conversiones.box2d_sfml_x(pos.x) <= 840 && !alerta){
             caminata=true;
         }
     }
+
+
+   
 }
-
-
 
 
 bool Enemigos::estaVivo(){

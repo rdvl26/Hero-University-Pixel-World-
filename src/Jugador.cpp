@@ -153,7 +153,7 @@ void Jugador::setAnchoSalto_setAltoSalto(float ancho, float alto){
 
 void Jugador::iniciarSalto(){
     if(listaColisiones->tocaSuelo()){
-            impulsoSalto.y = 50.0f;
+            impulsoSalto.y = 80.0f;
             cuerpoJugador->ApplyLinearImpulseToCenter(impulsoSalto, true);
             contador = 0;
         }

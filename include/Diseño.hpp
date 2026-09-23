@@ -7,8 +7,6 @@
 class Diseño{
 
     protected:
-        float posicionX;
-        float posicionY;
         float alto;
         float ancho;
         sf::Sprite sprite;
@@ -22,6 +20,10 @@ class Diseño{
         float getPosicionX();
         
         float getPosicionY();
+
+        float getAncho();
+
+        float getAlto();
 
         virtual void dibujarTodo(sf::RenderWindow& ventana);
 
