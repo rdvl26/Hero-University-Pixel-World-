@@ -52,7 +52,7 @@ int main (){
         mundo->Step(1.0f/60.0f,8,3);
 
         player.actualizar(ventana, dt, eventoSaltar);
-        Enemigo1.Patrullaje(dt);
+        Enemigo1.movimientos(dt,player.getPosicionX(), player.getAncho(), player.getAlto(), 400);
         
         ventana.clear(sf::Color(51,153,255)); //Borrar el anterior FRAME y poner un fondo
         //Lo que dibujara en cada FRAME

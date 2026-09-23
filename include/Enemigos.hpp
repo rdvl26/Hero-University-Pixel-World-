@@ -14,6 +14,7 @@ class Enemigos : public Bot{
     protected:
         int tipo;
         bool caminata;
+        bool alerta;
         b2Body* cuerpoEnemigo;
         Conversiones conversiones;
 
@@ -22,7 +23,7 @@ class Enemigos : public Bot{
 
         ~Enemigos() override;
 
-        void Patrullaje(float &dt);
+        void movimientos(float &dt, float posObjetivo, float anchoObjetivo, float altoObjetivo , float distanciaClaveObjetivo = 10);
 
         bool estaVivo();
 
