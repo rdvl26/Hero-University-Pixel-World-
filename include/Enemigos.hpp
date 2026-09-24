@@ -15,12 +15,13 @@ class Enemigos : public Bot{
         int tipo;
         bool caminata;
         bool alerta;
+        float voltearSprite;
         b2Body* cuerpoEnemigo;
         Conversiones conversiones;
         float posObjetivo, anchoObjetivo, altoObjetivo,distanciaClaveObjetivo;
 
     public:
-        Enemigos(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto, int tipo, int vida , std::shared_ptr<b2World> mundo, float anchoVentana, float altoVentana);
+        Enemigos(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto, std::shared_ptr<b2World> mundo, float anchoVentana, float altoVentana, int tipo = 1);
 
         ~Enemigos() override;
 

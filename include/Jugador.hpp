@@ -61,7 +61,7 @@ class Jugador : public Bot{
     public:
         
 
-        Jugador(float posicionX, float posicionY,std::string rutaImagen,float alto, float ancho , std::string nombre, std::shared_ptr<b2World> mundo, ContactListener* listaColisiones, float anchoVentana, float altoVentana);
+        Jugador(float posicionX, float posicionY,std::string rutaImagen,float alto, float ancho , std::shared_ptr<b2World> mundo, ContactListener* listaColisiones, float anchoVentana, float altoVentana, std::string nombre = "player");
         
         ~Jugador() override;
 
@@ -71,17 +71,17 @@ class Jugador : public Bot{
 
         Estados getEstado() const;
 
-        void quieto(sf::RenderWindow& ventana,float& dt, bool derecha);
+        void quieto(float& dt, bool derecha);
 
         void setAnchoSalto_setAltoSalto(float ancho, float alto);
 
         void iniciarSalto();
 
-        void saltar(sf::RenderWindow& ventana, float& dt, float escalaX);
+        void saltar(float& dt, float escalaX);
 
         void interactuar(float posicionX, float posicionY);
 
-        void actualizar(sf::RenderWindow& ventana, float& dt, bool eventoSaltar);
+        void actualizar(float& dt, bool eventoSaltar);
 
         void dibujarTodo(sf::RenderWindow& ventana) override;
 
@@ -90,8 +90,7 @@ class Jugador : public Bot{
         std::string getNombre();
 
         float getVelocidadY();
-
-        friend class MaquinaEstados; //Maquina de estados tendrá acceso a los atributos privados
+        
 };
 
 #endif

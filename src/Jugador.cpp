@@ -1,6 +1,6 @@
 #include "../include/Jugador.hpp"
 
-Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float ancho, float alto , std::string nombre, std::shared_ptr<b2World> mundo ,ContactListener* listaColisiones, float anchoVentana, float altoVentana) :nombre(nombre), listaColisiones(listaColisiones),Bot(posicionX, posicionY, rutaImagen,ancho,alto), conversion(anchoVentana, altoVentana){
+Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float ancho, float alto , std::shared_ptr<b2World> mundo ,ContactListener* listaColisiones, float anchoVentana, float altoVentana, std::string nombre) :nombre(nombre), listaColisiones(listaColisiones),Bot(posicionX, posicionY, rutaImagen,ancho,alto), conversion(anchoVentana,altoVentana){
             sprite.setScale(1.15f,1.15f);
             sprite.setOrigin(ancho /2.0 , alto/2.0);
             vista.setSize(1280,720);
@@ -129,7 +129,7 @@ void Jugador::iniciarSalto(){
 
 }
 
-void Jugador::saltar(sf::RenderWindow& ventana, float& dt, float recorteAnimacionColumna){
+void Jugador::saltar(float& dt, float recorteAnimacionColumna){
         contador += dt;
 
          if(contador < 0.20){
@@ -176,7 +176,7 @@ void Jugador::interactuar(float posicionX, float posicionY){
 
 }
 
-void Jugador::quieto(sf::RenderWindow& ventana,float& dt, bool derecha){
+void Jugador::quieto(float& dt, bool derecha){
     
     if(derecha){
         posRecorte = 0;
@@ -220,7 +220,7 @@ void Jugador::cambiarEstado(Estados nuevoEstado){
     }
 }
 
-void Jugador::actualizar(sf::RenderWindow& ventana, float& dt, bool eventoSaltar){
+void Jugador::actualizar(float& dt, bool eventoSaltar){
      teclaW = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
     teclaA = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
     teclaS = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
@@ -255,16 +255,16 @@ void Jugador::actualizar(sf::RenderWindow& ventana, float& dt, bool eventoSaltar
         break;
     case Estados::Quieto:
         if(izq){
-            quieto(ventana, dt, false);
+            quieto(dt, false);
         }else{
-            quieto(ventana,dt, true);
+            quieto(dt, true);
         }
         break;
     case Estados::Salto:
         if(izq){
-            saltar(ventana, dt, 1.025);
+            saltar(dt, 1.025);
         }else{
-            saltar(ventana,dt,0);
+            saltar(dt,0);
         }
         break;
     }
