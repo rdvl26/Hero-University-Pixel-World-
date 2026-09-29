@@ -18,6 +18,9 @@ class Conversiones{
         //Para establecer la forma en Box2D
         float mitadAnchoBox2D(float anchoSFML);
         float mitadAltoBox2D(float altoSFML);
+
+        float anchoBox2D(float ancho_SFML);
+        float altoBox2D(float alto_SFML);
         //Para posicionar en Box2D
         float centroX_box2D(float x_sfml, float anchoSFML);
         float centroY_box2D(float y_sfml, float altoSFML);

@@ -25,15 +25,22 @@ int main (){
     b2Vec2 gravedad(0.0, -9.81f);
 
     std::shared_ptr<b2World> mundo = std::make_shared<b2World>(gravedad);
+    FiltroColisiones filtroColisiones;
     ContactListener listaContactos;
+    mundo->SetContactFilter(&filtroColisiones);
     mundo->SetContactListener(&listaContactos);
+    
 
-    Jugador player(640.0f,510.0f,"assets/JUGADOR.png",71,104, mundo, &listaContactos, ventana.getSize().x, ventana.getSize().y);
+    Jugador player(640.0f,550.0f,"assets/JUGADOR.png",71,104, mundo, &listaContactos, ventana.getSize().x, ventana.getSize().y);
     
     player.setAnchoSalto_setAltoSalto(76, 104.5); //Imagen del salto mas grande
     listaContactos.setSensor(player.getSensor()); //obtener el sensor de los pies
     Fondo fondos(mundo, ventana.getSize().x, ventana.getSize().y);
     Enemigos Enemigo1(940.0f, 485.0f, "assets/Enemigo.png", 71, 104, mundo, ventana.getSize().x, ventana.getSize().y);
+
+    
+    filtroColisiones.setFiltroJugador(player.getCuerpo(), player.getHitbox());
+    filtroColisiones.setFiltroEnemigo(Enemigo1.getCuerpo(), Enemigo1.getHitbox());
 
     while(ventana.isOpen()){
         dt = reloj.restart().asSeconds();
@@ -49,11 +56,11 @@ int main (){
             }
         }
 
-        mundo->Step(1.0f/60.0f,8,3);
-
         player.actualizar(dt, eventoSaltar);
         Enemigo1.actualizar(dt, false, player.getPosicionX(), player.getAncho(), player.getAlto(), 400);
         
+        mundo->Step(1/60.0f,8,3);
+      
         ventana.clear(sf::Color(51,153,255)); //Borrar el anterior FRAME y poner un fondo
         //Lo que dibujara en cada FRAME
         fondos.dibujarTodo(ventana);

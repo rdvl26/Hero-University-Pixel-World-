@@ -44,6 +44,7 @@ class Jugador : public Bot{
         b2Vec2 impulsoSalto;
         //Sensor que dirá si el jugador toca el suelo
         b2Fixture* sensorPies;
+        b2Fixture* hitbox;
         float anchoFrameSalto, altoFrameSalto;
         float posRecorte = 0;
         ContactListener* listaColisiones;
@@ -91,6 +92,9 @@ class Jugador : public Bot{
 
         float getVelocidadY();
         
+        b2Body* getCuerpo();
+
+        b2Fixture* getHitbox();
 };
 
 #endif

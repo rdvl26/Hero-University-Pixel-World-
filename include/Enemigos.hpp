@@ -19,9 +19,11 @@ class Enemigos : public Bot{
         b2Body* cuerpoEnemigo;
         Conversiones conversiones;
         float posObjetivo, anchoObjetivo, altoObjetivo,distanciaClaveObjetivo;
+        b2Fixture* hitbox;
+        float desplazarHitbox;
 
     public:
-        Enemigos(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto, std::shared_ptr<b2World> mundo, float anchoVentana, float altoVentana, int tipo = 1);
+        Enemigos(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto, std::shared_ptr<b2World> mundo, float anchoVentana, float altoVentana, int tipo = 1,  float desplazarHitbox = 0);
 
         ~Enemigos() override;
 
@@ -31,6 +33,8 @@ class Enemigos : public Bot{
 
         void actualizar(float &dt, bool derecha, float posObjetivo,float anchoObjetivo,float altoObjetivo,float distanciaClaveObjetivo);
 
+        b2Body* getCuerpo();
+        b2Fixture* getHitbox();
 };
 
 #endif

@@ -15,6 +15,13 @@ float Conversiones::mitadAnchoBox2D(float anchoSFML){
 float Conversiones::mitadAltoBox2D(float altoSFML){
     return (altoSFML/2)/escala;
 }
+float Conversiones::anchoBox2D(float ancho_SFML){
+    return ancho_SFML/escala;
+}
+float Conversiones::altoBox2D(float alto_SFML){
+    return alto_SFML/escala;
+}
+
 float Conversiones::centroX_box2D(float x_sfml, float anchoSFML){
     return (x_sfml + (anchoSFML/2))/escala;
 }

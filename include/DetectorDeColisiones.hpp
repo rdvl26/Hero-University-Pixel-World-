@@ -22,5 +22,23 @@ class ContactListener: public b2ContactListener{
         bool tocaSuelo() const;
 };
 
+class FiltroColisiones : public b2ContactFilter{
+    private:
+    b2Body* jugador;
+    b2Body* enemigo;
+
+    b2Fixture* hitboxJugador;
+    b2Fixture* hitboxEnemigo;
+    public:
+
+    FiltroColisiones();
+    
+    void setFiltroJugador(b2Body* jugador, b2Fixture* hitbox_jugador);
+    void setFiltroEnemigo(b2Body* enemigo, b2Fixture* hitbox_enemigo);
+
+    bool ShouldCollide(b2Fixture* fixA, b2Fixture* fixB) override;
+
+
+};
 
 #endif
