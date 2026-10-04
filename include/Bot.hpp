@@ -31,7 +31,7 @@ class Bot : public Diseño{
         ~Bot() override;
         virtual void movimientos(float& dt, bool derecha = false);
 
-        void combate();
+        virtual void combate(float& contador, float& dt);
 
         void recibioDaño();
 

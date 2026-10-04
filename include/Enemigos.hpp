@@ -5,6 +5,7 @@
 #include <string>
 #include <box2d/box2d.h>
 #include <memory>
+#include <cmath>
 
 #include "Bot.hpp"
 #include "conversiones.hpp"
@@ -16,9 +17,16 @@ class Enemigos : public Bot{
         bool caminata;
         bool alerta;
         float voltearSprite;
+        int estadoFurioso;
         b2Body* cuerpoEnemigo;
         Conversiones conversiones;
-        float posObjetivo, anchoObjetivo, altoObjetivo,distanciaClaveObjetivo;
+        //atributos de deteccion y cobate
+        float posObjetivo, anchoObjetivo, altoObjetivo,distanciaClaveObjetivo,distanciaX_total, distanciaX_absoluta;
+        float distanciaCombate;
+        bool atacando;
+        bool animacionActiva;
+        int velocidadAtaque;
+        int velocidadPatrullaje;
         b2Fixture* hitbox;
         float desplazarHitbox;
 
@@ -31,7 +39,18 @@ class Enemigos : public Bot{
 
         bool estaVivo();
 
-        void actualizar(float &dt, bool derecha, float posObjetivo,float anchoObjetivo,float altoObjetivo,float distanciaClaveObjetivo);
+        void setDistanciaObjetivo(float pixeles);
+
+        void setDistanciaCombate(float px);
+
+        void setVelocidadAtaque(int metrosPorSegundo);
+
+        void setVelocidadPatrullaje(int metrosPorSegundo);
+
+
+        void actualizar(float &dt, bool derecha, float posObjetivo,float anchoObjetivo,float altoObjetivo);
+
+        void combate(float& contador, float& dt) override;
 
         b2Body* getCuerpo();
         b2Fixture* getHitbox();

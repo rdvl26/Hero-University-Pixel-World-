@@ -40,9 +40,9 @@ Fondo::Fondo(std::shared_ptr<b2World> mundo, float anchoVentana, float alturaVen
         spritesSuelo.emplace_back(suelo);
         spritesSuelo.back().setTexture(*cargarTexturaFondo[1]);
         if(i == 0)
-            tamañoImagen_Suelo = spritesSuelo.back().getGlobalBounds();
+        tamañoImagen_Suelo = spritesSuelo.back().getGlobalBounds();
         spritesSuelo.back().setScale(1.5f,1.5f);
-        spritesSuelo.back().setPosition(posX_suelo + (tamañoImagen_Suelo.width*i),528);
+        spritesSuelo.back().setPosition(posX_suelo + (tamañoImagen_Suelo.width*i * 1.5),528);
     }
 
     b2BodyDef defSuelo;

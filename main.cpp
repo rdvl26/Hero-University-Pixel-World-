@@ -30,14 +30,16 @@ int main (){
     mundo->SetContactFilter(&filtroColisiones);
     mundo->SetContactListener(&listaContactos);
     
-
     Jugador player(640.0f,550.0f,"assets/JUGADOR.png",71,104, mundo, &listaContactos, ventana.getSize().x, ventana.getSize().y);
     
     player.setAnchoSalto_setAltoSalto(76, 104.5); //Imagen del salto mas grande
     listaContactos.setSensor(player.getSensor()); //obtener el sensor de los pies
     Fondo fondos(mundo, ventana.getSize().x, ventana.getSize().y);
-    Enemigos Enemigo1(940.0f, 485.0f, "assets/Enemigo.png", 71, 104, mundo, ventana.getSize().x, ventana.getSize().y);
-
+    Enemigos Enemigo1(940.0f, 485.0f, "assets/ENEMIGOS.png", 71, 104, mundo, ventana.getSize().x, ventana.getSize().y);
+    Enemigo1.setDistanciaObjetivo(300);
+    Enemigo1.setDistanciaCombate(20);
+    Enemigo1.setVelocidadAtaque(3);
+    Enemigo1.setVelocidadPatrullaje(1.5);
     
     filtroColisiones.setFiltroJugador(player.getCuerpo(), player.getHitbox());
     filtroColisiones.setFiltroEnemigo(Enemigo1.getCuerpo(), Enemigo1.getHitbox());
@@ -56,10 +58,12 @@ int main (){
             }
         }
 
-        player.actualizar(dt, eventoSaltar);
-        Enemigo1.actualizar(dt, false, player.getPosicionX(), player.getAncho(), player.getAlto(), 400);
-        
+       
         mundo->Step(1/60.0f,8,3);
+
+        player.actualizar(dt, eventoSaltar);
+        Enemigo1.actualizar(dt, false, player.getPosicionX(), player.getAncho(), player.getAlto());
+        
       
         ventana.clear(sf::Color(51,153,255)); //Borrar el anterior FRAME y poner un fondo
         //Lo que dibujara en cada FRAME

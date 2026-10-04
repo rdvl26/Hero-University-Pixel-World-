@@ -4,6 +4,10 @@ Enemigos::Enemigos(float posicionX, float posicionY,std::string rutaImagen, floa
 
     caminata = true;
     alerta = false;
+    //predeterminado
+    distanciaClaveObjetivo = 100; 
+    velocidadAtaque = 2;
+    velocidadPatrullaje = 2;
     voltearSprite = 1;
     sprite.setScale(1.15f,1.15f);
     sprite.setOrigin(this->ancho/2.0, this->alto/2.0);
@@ -37,32 +41,75 @@ Enemigos::~Enemigos(){
 
 }
 
-void Enemigos::actualizar(float& dt, bool derecha, float posObjetivo,float anchoObjetivo,float altoObjetivo,float distanciaClaveObjetivo){
+void Enemigos::setDistanciaObjetivo(float pixeles){
+    distanciaClaveObjetivo = pixeles;
+}
+
+void Enemigos::setDistanciaCombate(float px){
+    distanciaCombate = px;
+}
+
+void Enemigos::setVelocidadAtaque(int metrosPorSegundo){
+    velocidadAtaque = metrosPorSegundo;
+}
+
+void Enemigos::setVelocidadPatrullaje(int metrosPorSegundo){
+    velocidadPatrullaje = metrosPorSegundo;
+}
+
+void Enemigos::actualizar(float& dt, bool derecha, float posObjetivo,float anchoObjetivo,float altoObjetivo){
         this->posObjetivo = posObjetivo;
         this->anchoObjetivo = anchoObjetivo;
         this->altoObjetivo = altoObjetivo;
-        this->distanciaClaveObjetivo = distanciaClaveObjetivo;
 
         movimientos(dt, false);
 }
 
+void Enemigos::combate(float& contador, float& dt){
+    contador+=dt;
+            recorte = sf::IntRect(animacionX = 0,animacionY = 2,this->ancho,this->alto);// 1
+            sprite.setTextureRect(recorte);
+    pos = cuerpoEnemigo->GetPosition();
+
+    sprite.setPosition(conversiones.box2d_sfml_x(pos.x), conversiones.box2d_sfml_y(pos.y));
+}
+
 void Enemigos::movimientos(float &dt, bool derecha){
 
- if((posObjetivo + (this->anchoObjetivo/2)) > sprite.getPosition().x + distanciaClaveObjetivo || (posObjetivo + (this->anchoObjetivo/2)) < sprite.getPosition().x - distanciaClaveObjetivo){
-        alerta = false;
+    distanciaX_total = (posObjetivo + (this->anchoObjetivo / 2.0f)) - ((sprite.getPosition().x + (ancho/2.0f)));
+    distanciaX_absoluta = std::abs(distanciaX_total);
+    if(distanciaX_absoluta > distanciaClaveObjetivo){
+            alerta = false;
+            estadoFurioso = 0;
+            atacando = false;
+            animacionActiva = true;
+    }else if(distanciaX_absoluta <= (anchoObjetivo/2) + (ancho/2)){
+            alerta = true;
+            estadoFurioso = 1;
+            atacando = true;
+            vel.x = 0;
+            cuerpoEnemigo->SetLinearVelocity(vel);
+            animacionActiva = false;
     }else{
         alerta = true;
-        if(posObjetivo + (this->anchoObjetivo/2) > sprite.getPosition().x + 1){
-            vel.x = 2.0f;
+        atacando = false;
+        animacionActiva = true;
+        estadoFurioso = 1;
+        if(posObjetivo + (this->anchoObjetivo) > sprite.getPosition().x){
+            vel.x = velocidadAtaque;
             cuerpoEnemigo->SetLinearVelocity(vel);
             caminata = true;
             sprite.setScale(1.15,1.15);
+            
         }
-        else{
-            vel.x = -2.0f;
+        else if(posObjetivo + (this->anchoObjetivo) < sprite.getPosition().x){
+            vel.x = -velocidadAtaque;
             cuerpoEnemigo->SetLinearVelocity(vel);
             caminata = false;
             sprite.setScale(-1.15,1.15);
+        }else{
+            vel.x = 0.5f;
+            cuerpoEnemigo->SetLinearVelocity(vel);
         }
     }
     if(caminata){ 
@@ -70,39 +117,37 @@ void Enemigos::movimientos(float &dt, bool derecha){
     }else{
         voltearSprite = -1;
     }
-
-    //Camina a la derecha
     
         if(!alerta){
             vel = cuerpoEnemigo->GetLinearVelocity();
-            vel.x = 2.0f * voltearSprite;
+            vel.x = velocidadPatrullaje * voltearSprite;
             cuerpoEnemigo->SetLinearVelocity(vel);
 
         }
-       
+    if(animacionActiva){
         contador+=dt;
         if(contador < 0.20){
-            recorte = sf::IntRect(animacionX = 0,animacionY = 0,this->ancho,this->alto);// 1
+            recorte = sf::IntRect(animacionX = 0,animacionY = (estadoFurioso * 2),this->ancho,this->alto);// 1
             sprite.setTextureRect(recorte);
         }
         else if(contador < 0.33){
-            recorte = sf::IntRect(animacionX = this->ancho,animacionY = 0,this->ancho,this->alto);// 2
+            recorte = sf::IntRect(animacionX = this->ancho,animacionY = (estadoFurioso * 2),this->ancho,this->alto);// 2
             sprite.setTextureRect(recorte);
         }
         else if(contador < 0.46){
-            recorte = sf::IntRect(animacionX = this->ancho*2,animacionY = 0,this->ancho,this->alto);// 3
+            recorte = sf::IntRect(animacionX = this->ancho*2,animacionY = (estadoFurioso * 2),this->ancho,this->alto);// 3
             sprite.setTextureRect(recorte);     
         }
         else if(contador < 0.59){
-            recorte = sf::IntRect(animacionX = 0,animacionY = this->alto,this->ancho,this->alto);// 4
+            recorte = sf::IntRect(animacionX = this->ancho*3,animacionY = (estadoFurioso * 2),this->ancho,this->alto);// 4
             sprite.setTextureRect(recorte);         
         }
         else if(contador < 0.72){
-            recorte = sf::IntRect(animacionX = this->ancho,animacionY = this->alto,this->ancho,this->alto);// 5
+            recorte = sf::IntRect(animacionX = this->ancho*4,animacionY = (estadoFurioso * 2),this->ancho,this->alto);// 5
             sprite.setTextureRect(recorte);       
         }
         else if(contador < 0.85){
-            recorte = sf::IntRect(animacionX = this->ancho*2,animacionY = this->alto,this->ancho,this->alto);// 6
+            recorte = sf::IntRect(animacionX = this->ancho*5,animacionY = (estadoFurioso * 2),this->ancho,this->alto);// 6
             sprite.setTextureRect(recorte);     
         }
         else{
@@ -113,18 +158,20 @@ void Enemigos::movimientos(float &dt, bool derecha){
 
         sprite.setPosition(conversiones.box2d_sfml_x(pos.x), conversiones.box2d_sfml_y(pos.y));
 
-    //camina a la derecha
+    //camina a la izquierda
         if(conversiones.box2d_sfml_x(pos.x) >= 1040 && !alerta){
             caminata=false;// cambiamos a falso para podercaminar a la izquierda
             sprite.setScale(-1.15, 1.15);
         }
-    //Camina a la izquierda      
+    //Camina a la derecha      
    
         if(conversiones.box2d_sfml_x(pos.x) <= 840 && !alerta){
             caminata=true;
             sprite.setScale(1.15, 1.15);
         }
-    
+    }else{
+        combate(contador, dt);
+    }
 
 
    

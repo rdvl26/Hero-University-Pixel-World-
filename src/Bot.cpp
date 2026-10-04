@@ -19,7 +19,7 @@
            
         }
 
-    void Bot::combate(){
+    void Bot::combate(float& contador, float& dt){
 
         } 
 
