@@ -9,17 +9,24 @@ class ContactListener: public b2ContactListener{
     private:
         int numeroContactos;
         b2Fixture* sensorPies;
+        b2Fixture* hitboxA;
+        b2Fixture* hitboxB;
+        bool estanColisionandoHitBox;
     public:
 
         ContactListener();
         
         void setSensor(b2Fixture* sensor);
 
+        void setHitBox(b2Fixture* fixA, b2Fixture* fixB);
+
         void BeginContact(b2Contact* contact) override;
 
         void EndContact(b2Contact* contact) override;
 
         bool tocaSuelo() const;
+
+        std::string hitboxContact() const;
 };
 
 class FiltroColisiones : public b2ContactFilter{

@@ -27,7 +27,7 @@ Enemigos::Enemigos(float posicionX, float posicionY,std::string rutaImagen, floa
     cuerpoEnemigo->CreateFixture(&fixEnemigo);
 
     b2PolygonShape formaHitbox;
-    formaHitbox.SetAsBox(conversiones.mitadAnchoBox2D(this->ancho - 4), conversiones.mitadAltoBox2D(this->alto - 4), b2Vec2(conversiones.anchoBox2D(ancho*sprite.getScale().x), 0), 0.0f);
+    formaHitbox.SetAsBox(conversiones.mitadAnchoBox2D(this->ancho - 2), conversiones.mitadAltoBox2D(this->alto - 4));
 
     b2FixtureDef fixHitbox;
     fixHitbox.shape = &formaHitbox;

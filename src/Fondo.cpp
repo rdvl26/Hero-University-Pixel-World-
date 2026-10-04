@@ -53,7 +53,7 @@ Fondo::Fondo(std::shared_ptr<b2World> mundo, float anchoVentana, float alturaVen
     cuerpoSuelo= mundo->CreateBody(&defSuelo);
     
     b2PolygonShape formaSuelo;
-    formaSuelo.SetAsBox(conversiones.mitadAnchoBox2D(tamañoImagen_Suelo.width * MosaicosSuelos), conversiones.mitadAltoBox2D(200));
+    formaSuelo.SetAsBox(conversiones.mitadAnchoBox2D(tamañoImagen_Suelo.width * spritesSuelo.back().getScale().x * MosaicosSuelos), conversiones.mitadAltoBox2D(200));
   
     cuerpoSuelo->CreateFixture(&formaSuelo, 0.0f);
 

@@ -41,7 +41,7 @@ Jugador::Jugador(float posicionX, float posicionY,std::string rutaImagen,float a
             sensorPies = cuerpoJugador->CreateFixture(&fixPies);
 
             b2PolygonShape formaHitbox;
-            formaHitbox.SetAsBox(conversion.mitadAnchoBox2D(this->ancho - 4), conversion.mitadAltoBox2D(this->alto - 4));
+            formaHitbox.SetAsBox(conversion.mitadAnchoBox2D(this->ancho - 2), conversion.mitadAltoBox2D(this->alto - 4));
 
             b2FixtureDef fixHitbox;
             fixHitbox.shape = &formaHitbox;

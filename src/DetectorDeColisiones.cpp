@@ -4,10 +4,18 @@
     ContactListener::ContactListener(){
         numeroContactos = 0;
         sensorPies = nullptr;
+        hitboxA = nullptr;
+        hitboxB = nullptr;
+        estanColisionandoHitBox = false;
     }
 
     void ContactListener::setSensor(b2Fixture* sensor){
         sensorPies = sensor;
+    }
+
+    void ContactListener::setHitBox(b2Fixture* fixA, b2Fixture* fixB){
+        this->hitboxA = fixA;
+        this->hitboxB = fixB;
     }
 
     void ContactListener::BeginContact(b2Contact* contact){
@@ -15,6 +23,12 @@
         if(sensorPies == contact->GetFixtureA() || sensorPies == contact->GetFixtureB()){
             //comprobar si el sensor de los pies detecta algo
             numeroContactos++;
+        }
+
+        if(hitboxA && hitboxB){
+            if((hitboxA == contact->GetFixtureA() && hitboxB == contact->GetFixtureB()) || (hitboxB == contact->GetFixtureA() && hitboxA == contact->GetFixtureB())){
+                estanColisionandoHitBox = true;
+            }
         }
 
             
@@ -26,11 +40,21 @@
             //comprobar si el sensor de los pies detecta algo
             numeroContactos--;
         }
+
+         if((hitboxA == contact->GetFixtureA() && hitboxB == contact->GetFixtureB()) || (hitboxB == contact->GetFixtureA() && hitboxA == contact->GetFixtureB())){
+                estanColisionandoHitBox = false;
+            }
             
     }
 
     bool ContactListener::tocaSuelo() const{
             return numeroContactos > 0;
+    }
+
+    std::string ContactListener::hitboxContact() const{
+        if(estanColisionandoHitBox)
+            return "Contacto\n";
+        return "Sin contacto\n";
     }
 
     FiltroColisiones::FiltroColisiones(){
@@ -53,8 +77,7 @@
         b2Body* b = fixB->GetBody();
 
         if((a == jugador && b == enemigo) || a == enemigo && b == jugador){
-            if((fixA == hitboxJugador && fixB == hitboxEnemigo) || (fixA == hitboxJugador && fixB == hitboxEnemigo)){
-                std::cout << "Contacto\n";
+            if((fixA == hitboxJugador && fixB == hitboxEnemigo) || (fixA == hitboxEnemigo && fixB == hitboxJugador)){
                 return true;
             }
         
