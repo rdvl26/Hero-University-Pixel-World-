@@ -86,7 +86,7 @@ class Jugador : public Bot{
 
         void dibujarTodo(sf::RenderWindow& ventana) override;
 
-        b2Fixture* getSensor() ;
+        b2Fixture* getSensor();
 
         std::string getNombre();
 

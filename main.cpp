@@ -39,7 +39,7 @@ int main (){
     Enemigo1.setDistanciaObjetivo(300);
     Enemigo1.setDistanciaCombate(20);
     Enemigo1.setVelocidadAtaque(3);
-    Enemigo1.setVelocidadPatrullaje(1.5);
+    Enemigo1.setVelocidadPatrullaje(2);
     listaContactos.setHitBox(player.getHitbox(), Enemigo1.getHitbox());
     
     filtroColisiones.setFiltroJugador(player.getCuerpo(), player.getHitbox());
@@ -64,8 +64,6 @@ int main (){
 
         player.actualizar(dt, eventoSaltar);
         Enemigo1.actualizar(dt, false, player.getPosicionX(), player.getAncho(), player.getAlto());
-        
-        std::cout << listaContactos.hitboxContact();
       
         ventana.clear(sf::Color(51,153,255)); //Borrar el anterior FRAME y poner un fondo
         //Lo que dibujara en cada FRAME
