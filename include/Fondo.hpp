@@ -6,6 +6,7 @@
 #include "conversiones.hpp"
 #include <memory>
 #include <box2d/box2d.h>
+#include <stdexcept>
 
 class Fondo{
 private:
@@ -26,11 +27,18 @@ private:
     const int posY_suelo = 528;
     b2Body* cuerpoSuelo = nullptr;
     Conversiones conversiones;
+
+    bool archivosCargados;
+    std::string mensajeError;
     
 public:
     Fondo(std::shared_ptr<b2World> mundo, float anchoVentana, float alturaVentana);
 
     void cargarFondo();
+
+    bool isCargadoLosArchivos() const;
+
+    std::string getMensajeError() const;
 
     void dibujarTodo(sf::RenderWindow& ventana);
 };

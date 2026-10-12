@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <stdexcept>
 
 class Diseño{
 
@@ -11,6 +12,8 @@ class Diseño{
         float ancho;
         sf::Sprite sprite;
         sf::Texture textura;
+        bool isOpen_Ventana = true;
+        std::string mensajeError;
     
     public:
         Diseño(float posicionX, float posicionY,std::string rutaImagen, float ancho, float alto);
@@ -24,6 +27,10 @@ class Diseño{
         float getAncho();
 
         float getAlto();
+
+        std::string getMensajeError() const;
+
+        bool isOpen() const;
 
         virtual void dibujarTodo(sf::RenderWindow& ventana);
 

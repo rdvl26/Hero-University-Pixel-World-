@@ -3,6 +3,10 @@
 #include <memory>
 #include <box2d/box2d.h>
 #include <SFML/Graphics.hpp>
+#include <stdexcept>
+#include <sstream>
+
+//.hpp
 #include "include/Jugador.hpp"
 #include "include/Enemigos.hpp"
 #include "include/Fondo.hpp"
@@ -11,8 +15,11 @@
 #include "include/Llave.hpp"
 #include "include/conversiones.hpp"
 #include "include/DetectorDeColisiones.hpp"
+#include "include/ventanaError.hpp"
 
 int main (){
+    std::stringstream erroresSFML;
+    sf::err().rdbuf(erroresSFML.rdbuf());   //Silenciar errores de sfml para que no salga en el terminal
 
     sf::RenderWindow ventana(sf::VideoMode(1280,720), "Hero University");
     ventana.setFramerateLimit(90);
@@ -29,21 +36,50 @@ int main (){
     ContactListener listaContactos;
     mundo->SetContactFilter(&filtroColisiones);
     mundo->SetContactListener(&listaContactos);
-    
+
     Jugador player(640.0f,550.0f,"assets/JUGADOR.png",71,104, mundo, &listaContactos, ventana.getSize().x, ventana.getSize().y);
-    
-    player.setAnchoSalto_setAltoSalto(76, 104.5); //Imagen del salto mas grande
-    listaContactos.setSensor(player.getSensor()); //obtener el sensor de los pies
-    Fondo fondos(mundo, ventana.getSize().x, ventana.getSize().y);
     Enemigos Enemigo1(940.0f, 485.0f, "assets/ENEMIGOS.png", 71, 104, mundo, ventana.getSize().x, ventana.getSize().y);
-    Enemigo1.setDistanciaObjetivo(300);
-    Enemigo1.setDistanciaCombate(20);
-    Enemigo1.setVelocidadAtaque(3);
-    Enemigo1.setVelocidadPatrullaje(2);
-    listaContactos.setHitBox(player.getHitbox(), Enemigo1.getHitbox());
+    Fondo fondos(mundo, ventana.getSize().x, ventana.getSize().y);
+
+    try{
+        VentanaError ventanaError("assets/alertas.jpeg", "assets/mrsmonster.ttf", 0.5f,0.5f);
+          ventanaError.setPositionMensaje(425,85);
+          ventanaError.setColorTexto(sf::Color::Red);
+        if(!player.isOpen()){
+            ventana.close();
+            ventanaError.crearVentana(player.getMensajeError());
+        }else{
+            player.setAnchoSalto_setAltoSalto(76, 104.5); //Imagen del salto mas grande
+            listaContactos.setSensor(player.getSensor()); //obtener el sensor de los pies
+            filtroColisiones.setFiltroJugador(player.getCuerpo(), player.getHitbox());
+        }
+
+        if(!Enemigo1.isOpen()){
+            ventana.close();
+            ventanaError.crearVentana(Enemigo1.getMensajeError());
+        }else{
+            Enemigo1.setDistanciaObjetivo(300);
+            Enemigo1.setDistanciaCombate(20);
+            Enemigo1.setVelocidadAtaque(3);
+            Enemigo1.setVelocidadPatrullaje(2);
+            listaContactos.setHitBox(player.getHitbox(), Enemigo1.getHitbox());
+            filtroColisiones.setFiltroEnemigo(Enemigo1.getCuerpo(), Enemigo1.getHitbox());
+
+        }  
+
+        if(!fondos.isCargadoLosArchivos()){
+            ventana.close();
+            ventanaError.crearVentana(fondos.getMensajeError());
+        }
     
-    filtroColisiones.setFiltroJugador(player.getCuerpo(), player.getHitbox());
-    filtroColisiones.setFiltroEnemigo(Enemigo1.getCuerpo(), Enemigo1.getHitbox());
+
+    }catch(std::runtime_error& e){
+        abrirTerminal(e.what());
+        ventana.close();
+    }
+   
+
+  
 
     while(ventana.isOpen()){
         dt = reloj.restart().asSeconds();

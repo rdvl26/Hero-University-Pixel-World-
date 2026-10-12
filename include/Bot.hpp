@@ -26,7 +26,7 @@ class Bot : public Diseño{
 
     public:
         
-        Bot(float posicionX, float posicionY, std::string rutaImagen, float ancho, float alto );
+        Bot(float posicionX, float posicionY, std::string rutaImagen, float ancho, float alto);
 
         ~Bot() override;
         virtual void movimientos(float& dt, bool derecha = false);
